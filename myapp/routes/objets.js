@@ -27,6 +27,7 @@ router.get('/:objet_id', function(req, res, next) {
   	});
 });
 
+//modify object
 router.patch('/:objet_id', function(req, res, next) {
 	connection.query('UPDATE objet SET actif = ' + req.body.actif + ', isStock = ' + req.body.isStock + ', commentaire = "' + req.body.commentaire +'", siteEPF = ' + req.body.siteEPF + ', idCategorie = ' + req.body.idCategorie + ', idUser = ' + req.body.idUser + ' WHERE id = ' + req.params.objet_id, function (error, results, fields) {
 	  	if(error){
@@ -39,6 +40,7 @@ router.patch('/:objet_id', function(req, res, next) {
   	});
 });
 
+//delete object
 router.delete('/:objet_id', function(req, res, next) {
 	connection.query('DELETE FROM objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
 	  	if(error){
@@ -51,6 +53,7 @@ router.delete('/:objet_id', function(req, res, next) {
   	});
 });
 
+//create object
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + req.body.siteEPF + ',' + req.body.idCategorie + ',' + req.body.idUser +')', function (error, results, fields) {
 	  	if(error){
