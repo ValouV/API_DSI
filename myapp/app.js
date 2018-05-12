@@ -27,10 +27,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
 		host     : 'localhost',
-    port     : '8889',
+    	port     : '3306',
+		user     : 'root',
+		password : '',
+		database : 'bddv1'
+		/*
+		port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI'
+		*/
+
 	});
 	connection.connect();
 	next();
