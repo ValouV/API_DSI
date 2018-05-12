@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require("mysql");
+var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -20,23 +21,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 
 //Database connection
 app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
 		host     : 'localhost',
-    	port     : '3306',
+    /*port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1'
-		/*
+		database : 'bddv1'*/
+
 		port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI'
-		*/
+		
 
 	});
 	connection.connect();
