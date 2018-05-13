@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  127.0.0.1
--- Généré le :  Sam 12 Mai 2018 à 17:34
+-- Généré le :  Dim 13 Mai 2018 à 23:16
 -- Version du serveur :  5.7.14
 -- Version de PHP :  7.0.10
 
@@ -126,8 +126,10 @@ CREATE TABLE `objet` (
 --
 
 INSERT INTO `objet` (`id`, `actif`, `isStock`, `commentaire`, `siteEPF`, `idCategorie`, `idUser`) VALUES
-(1007, 1, 2, 'aaaa', 3, 2, 3),
-(10000, 1, 1, 'yo', 1, 10, 10);
+(1007, 7, 1, 'ghgh', 4, 4, 1),
+(10000, 1, 1, 'yo', 1, 10, 10),
+(10001, 4, 1, 'ah', 4, 4, 1),
+(10002, 4, 1, 'ah', 4, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -143,6 +145,14 @@ CREATE TABLE `user` (
   `role` int(11) NOT NULL,
   `siteEPF` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Contenu de la table `user`
+--
+
+INSERT INTO `user` (`id`, `email`, `nom`, `prenom`, `role`, `siteEPF`) VALUES
+(1, 'email', 'nom1', 'prenom1', 0, 0),
+(2, 'email2', 'nom2', 'prenom2', 1, 0);
 
 --
 -- Index pour les tables exportées
@@ -234,12 +244,12 @@ ALTER TABLE `historiquestock`
 -- AUTO_INCREMENT pour la table `objet`
 --
 ALTER TABLE `objet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10071;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10003;
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

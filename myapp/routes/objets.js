@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var jwt = require('jsonwebtoken');
 
 //get all objets
-router.get('/', function(req, res, next) {
+/*router.get('/', function(req, res, next) {
 	connection.query('SELECT * from objet', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -12,7 +13,7 @@ router.get('/', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
-});
+});*/
 
 //get specific object
 router.get('/:objet_id', function(req, res, next) {
