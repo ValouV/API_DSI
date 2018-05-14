@@ -4,7 +4,7 @@ var jwt = require('jsonwebtoken');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.send('respond with a resource (haha)');
 });
 
 
@@ -77,7 +77,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/aaa', function(req, res, next) {
-	connection.query('SELECT * from user', function (error, results, fields) {
+	connection.query('SELECT * from objet', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
