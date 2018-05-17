@@ -29,17 +29,21 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 //Database connection
 app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
+
+		//server connection ne pas toucher
 		host     : 'localhost',
-    	port     : '3306',
+		user     : 'root',
+		password : '',
+		database : 'inventaire'
+    /*port     : '3306',
 		user     : 'root',
 		password : '',
 		database : 'bddv1'
-/*
 		port     : '8889',
 		user     : 'root',
 		password : 'root',
-		database : 'Inventaire_DSI'
-		*/
+		database : 'Inventaire_DSI*/
+
 
 	});
 	connection.connect();
