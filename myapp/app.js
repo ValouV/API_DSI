@@ -32,17 +32,17 @@ app.use(function(req, res, next){
 
 		//server connection ne pas toucher
 		host     : 'localhost',
-		/*user     : 'root',
-		password : '',
-		database : 'inventaire'
-    port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1'*/
+		database : 'inventaire'
+    /*port     : '3306',
+		user     : 'root',
+		password : '',
+		database : 'bddv1'
 		port     : '8889',
 		user     : 'root',
 		password : 'root',
-		database : 'Inventaire_DSI'
+		database : 'Inventaire_DSI'*/
 
 
 	});
