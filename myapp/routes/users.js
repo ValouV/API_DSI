@@ -114,7 +114,7 @@ router.delete('/:user_id', function(req, res, next) {
 
 //create object
 router.post('/', function(req, res, next) {
-	connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES ("' + req.body.email + '",' + req.body.nom + ',' + req.body.prenom +',' + req.body.password + ',' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
+	connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES (' + req.body.email + ',' + req.body.nom + ',' + req.body.prenom +',' + req.body.password + ',' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
