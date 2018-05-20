@@ -10,6 +10,7 @@ var jwt = require('jsonwebtoken');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var objetsRouter = require('./routes/objets');
+var hPretsRouter = require('./routes/hPrets');
 
 var app = express();
 
@@ -35,11 +36,13 @@ app.use(function(req, res, next){
 		user     : 'root',
 		password : '',
 		database : 'inventaire'
+		//louis
     /*port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1'
-		port     : '8889',
+		database : 'bddv1'*/
+		//val
+		/*port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI'*/
@@ -53,6 +56,8 @@ app.use(function(req, res, next){
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
+app.use('/hPrets', hPretsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
