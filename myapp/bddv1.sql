@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le :  ven. 18 mai 2018 à 15:40
+-- Généré le :  lun. 21 mai 2018 à 12:21
 -- Version du serveur :  5.6.38
 -- Version de PHP :  7.0.12
 
@@ -59,6 +59,27 @@ CREATE TABLE `categorie` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `catlimite`
+--
+
+CREATE TABLE `catlimite` (
+  `id` int(11) NOT NULL,
+  `limite` int(11) NOT NULL,
+  `idCategorie` int(11) NOT NULL,
+  `siteEPF` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `catlimite`
+--
+
+INSERT INTO `catlimite` (`id`, `limite`, `idCategorie`, `siteEPF`) VALUES
+(2, 10, 2, 2),
+(3, 10, 3, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `helisa`
 --
 
@@ -85,6 +106,13 @@ CREATE TABLE `historiquepret` (
   `idUserHelisa` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Déchargement des données de la table `historiquepret`
+--
+
+INSERT INTO `historiquepret` (`id`, `depart`, `retourPrevu`, `retourEffectif`, `idUserAdmin`, `idObjet`, `idUserHelisa`) VALUES
+(2, '2018-05-20 20:00:00', '2018-05-21 20:00:00', '0000-00-00 00:00:00', 1, 2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -98,6 +126,19 @@ CREATE TABLE `historiquestock` (
   `idUserAdmin` int(11) NOT NULL,
   `idObjet` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `historiquestock`
+--
+
+INSERT INTO `historiquestock` (`id`, `arrivée`, `depart`, `idUserAdmin`, `idObjet`) VALUES
+(2, '2018-05-21 21:00:00', '2018-05-21 21:50:00', 1, 1),
+(3, '2018-05-21 21:00:00', '0000-00-00 00:00:00', 1, 1),
+(4, '2018-05-21 21:00:00', '0000-00-00 00:00:00', 1, 1),
+(5, '2018-05-21 21:00:00', '0000-00-00 00:00:00', 1, 1),
+(6, '2018-05-21 21:00:00', '0000-00-00 00:00:00', 1, 1),
+(7, '2018-05-21 21:00:00', '0000-00-00 00:00:00', 1, 1),
+(8, '2018-05-21 21:00:00', '0000-00-00 00:00:00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -123,7 +164,8 @@ INSERT INTO `objet` (`id`, `actif`, `isStock`, `commentaire`, `siteEPF`, `idCate
 (1007, 0, 0, 'Nouvel objet numéro 353', 1, 1, 1),
 (10000, 1, 1, 'yo', 1, 10, 10),
 (10001, 4, 1, 'ah', 4, 4, 1),
-(10002, 4, 1, 'ah', 4, 4, 1);
+(10002, 4, 1, 'ah', 4, 4, 1),
+(10003, 0, 0, 'Nouvel objet numéro 353', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -170,6 +212,12 @@ ALTER TABLE `alertestock`
 -- Index pour la table `categorie`
 --
 ALTER TABLE `categorie`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `catlimite`
+--
+ALTER TABLE `catlimite`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -225,6 +273,12 @@ ALTER TABLE `categorie`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT pour la table `catlimite`
+--
+ALTER TABLE `catlimite`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT pour la table `helisa`
 --
 ALTER TABLE `helisa`
@@ -234,19 +288,19 @@ ALTER TABLE `helisa`
 -- AUTO_INCREMENT pour la table `historiquepret`
 --
 ALTER TABLE `historiquepret`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `historiquestock`
 --
 ALTER TABLE `historiquestock`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT pour la table `objet`
 --
 ALTER TABLE `objet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10003;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10004;
 
 --
 -- AUTO_INCREMENT pour la table `user`

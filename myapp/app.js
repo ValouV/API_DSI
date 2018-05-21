@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 var objetsRouter = require('./routes/objets');
 var hPretsRouter = require('./routes/hPrets');
 var hStocksRouter = require('./routes/hStocks');
+var cLimitRouter = require('./routes/cLimit');
 
 var app = express();
 
@@ -59,6 +60,7 @@ app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
 app.use('/hPrets', hPretsRouter);
 app.use('/hStocks', hStocksRouter);
+app.use('/cLimit', cLimitRouter);
 
 
 // catch 404 and forward to error handler
