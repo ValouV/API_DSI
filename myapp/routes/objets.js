@@ -14,6 +14,7 @@ router.use(function(req, res, next) {
       } else {
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
+        req.token = token;
         next();
       }
     });
@@ -35,7 +36,7 @@ router.get('/', function(req, res, next) {
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
 	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+  			res.send(({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
@@ -51,6 +52,7 @@ router.get('/:objet_id', function(req, res, next) {
 	  		//If there is error, we send the error in the error section with 500 status
 	  	} else {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+        //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});

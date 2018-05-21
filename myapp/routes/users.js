@@ -18,20 +18,16 @@ router.post('/connexion', function(req, res, next) {
 			res.send(JSON.stringify({"status": 200, "error": null, "response": results, message: 'Authentication failed. User not found.' }));
 		}
 		if (results.length){
-				//res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-        //
-        //TODO regarder payload
-        //
 				const payload = {
-					"sub": "1234567890"
+					"iduser" : results[0].id,
+					 "emailuser" : results[0].email
 				};
-				var token = jwt.sign(payload, 'shit');
+				var token = jwt.sign(payload, 'shit', {expiresIn: '1d'});
 				    // return the information including token as JSON
 				    res.json({
 				    	success: true,
 				    	message: 'Enjoy your token!',
-				    	token: token,
-							user: results
+				    	token: token
 				    });
 			}
 	  	}
@@ -50,6 +46,7 @@ router.use(function(req, res, next) {
       } else {
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
+        req.token = token;
         next();
       }
     });
@@ -71,6 +68,9 @@ router.get('/', function(req, res, next) {
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
 	  	} else {
+	  		
+	  		//affiche en console l'id et l'email de l'user qui a genere le token
+	  		//console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
