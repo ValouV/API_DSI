@@ -3,7 +3,9 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 
 
-//get specific object
+//get specific user
+//TODO token avec permissions différentes
+//TODO voir comment récupérer user via le token
 router.post('/connexion', function(req, res, next) {
 	connection.query('SELECT * from user WHERE email=? and password=?',[req.body.email,req.body.password], function (error, results, fields) {
 	  	if(error){
@@ -62,6 +64,7 @@ router.use(function(req, res, next) {
 });
 
 //get all users
+//TODO enlever password
 router.get('/', function(req, res, next) {
 	connection.query('SELECT * from user', function (error, results, fields) {
 	  	if(error){
@@ -74,7 +77,8 @@ router.get('/', function(req, res, next) {
   	});
 });
 
-//get specific object
+//get specific user
+//TODO enlever password
 router.get('/:user_id', function(req, res, next) {
 	connection.query('SELECT * from user WHERE id = ' + req.params.user_id, function (error, results, fields) {
 	  	if(error){
@@ -87,7 +91,7 @@ router.get('/:user_id', function(req, res, next) {
   	});
 });
 
-//modify object
+//modify user
 router.patch('/:user_id', function(req, res, next) {
 	connection.query('UPDATE user SET email = ' + req.body.email + ', nom = ' + req.body.nom + ', prenom = "' + req.body.prenom +'", password = ' + req.body.password + ', role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
 	  	if(error){
@@ -100,7 +104,7 @@ router.patch('/:user_id', function(req, res, next) {
   	});
 });
 
-//delete object
+//delete user
 router.delete('/:user_id', function(req, res, next) {
 	connection.query('DELETE FROM user WHERE id = ' + req.params.user_id, function (error, results, fields) {
 	  	if(error){
@@ -113,7 +117,8 @@ router.delete('/:user_id', function(req, res, next) {
   	});
 });
 
-//create object
+//create user
+//TODO vérifier email existe pas
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES ("' + req.body.email + '","' + req.body.nom + '","' + req.body.prenom +'","' + req.body.password + '",' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
 	  	if(error){

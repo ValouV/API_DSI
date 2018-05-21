@@ -56,6 +56,10 @@ app.use(function(req, res, next){
 	next();
 });
 
+
+//TODO route Hélisa
+//TODO mail alertes
+//TODO routes d'alertes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);

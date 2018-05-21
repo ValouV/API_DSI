@@ -41,6 +41,7 @@ router.get('/', function(req, res, next) {
 });
 
 //get specific hprets
+//TODO retourner les informations de catégorie, d'objet et de user
 router.get('/:hprets_id', function(req, res, next) {
 	connection.query('SELECT * from historiquepret WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){
@@ -54,6 +55,7 @@ router.get('/:hprets_id', function(req, res, next) {
 });
 
 //modify hprets
+//TODO supprimer cette route ?
 router.patch('/:hprets_id', function(req, res, next) {
 	connection.query('UPDATE historiquepret SET depart = "' + req.body.depart + '", retourPrevu = "' + req.body.retourPrevu + '", retourEffectif = "' + req.body.retourEffectif +'", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ', idUserHelisa = ' + req.body.idUserHelisa + ' WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){
@@ -67,6 +69,7 @@ router.patch('/:hprets_id', function(req, res, next) {
 });
 
 //delete hprets
+//TODO supprimer cette route ?
 router.delete('/:hprets_id', function(req, res, next) {
 	connection.query('DELETE FROM historiquepret WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){
@@ -82,6 +85,7 @@ router.delete('/:hprets_id', function(req, res, next) {
 //create hprets
 //TODO verify that objets has no hprets
 //TODO verify that objets !isStock
+//TODO mettre la date d'aujourd'hui par défault
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa) VALUES ("' + req.body.depart + '","' + req.body.retourPrevu + '","' + req.body.retourEffectif +'",' + req.body.idUserAdmin + ',' + req.body.idObjet + ',' + req.body.idUserHelisa +')', function (error, results, fields) {
 	  	if(error){
@@ -93,5 +97,7 @@ router.post('/', function(req, res, next) {
 	  	}
   	});
 });
+
+//TODO créer route de retour de pret
 
 module.exports = router;

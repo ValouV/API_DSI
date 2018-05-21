@@ -27,7 +27,7 @@ router.use(function(req, res, next) {
   }
 });
 
-//get all objets
+//get all categorie
 router.get('/', function(req, res, next) {
 	connection.query('SELECT * from categorie', function (error, results, fields) {
 	  	if(error){
@@ -40,7 +40,8 @@ router.get('/', function(req, res, next) {
   	});
 });
 
-//get specific object
+//get specific categorie
+//TODO envoyer les informations de nombre d'objets en stock, en flotte de pret et en pret, les limites associées
 router.get('/:cat_id', function(req, res, next) {
 	connection.query('SELECT * from categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
 	  	if(error){
@@ -53,7 +54,7 @@ router.get('/:cat_id', function(req, res, next) {
   	});
 });
 
-//modify object
+//modify categorie
 router.patch('/:cat_id', function(req, res, next) {
 	connection.query('UPDATE categorie SET nom = "' + req.body.nom + '", marque = "' + req.body.marque  +'" WHERE id = ' + req.params.cat_id, function (error, results, fields) {
 	  	if(error){
@@ -66,7 +67,8 @@ router.patch('/:cat_id', function(req, res, next) {
   	});
 });
 
-//delete object
+//delete categorie
+//TODO ne pas accepter si objets dans la categorie
 router.delete('/:cat_id', function(req, res, next) {
 	connection.query('DELETE FROM categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
 	  	if(error){
@@ -79,7 +81,8 @@ router.delete('/:cat_id', function(req, res, next) {
   	});
 });
 
-//create object
+//create categorie
+//TODO vérifier que la catégorie n'existe pas
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO categorie (nom, marque) VALUES ("' + req.body.nom + '","' + req.body.marque + '")', function (error, results, fields) {
 	  	if(error){

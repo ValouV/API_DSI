@@ -27,7 +27,7 @@ router.use(function(req, res, next) {
   }
 });
 
-//get all objets
+//get all limits
 router.get('/', function(req, res, next) {
 	connection.query('SELECT * from catlimite', function (error, results, fields) {
 	  	if(error){
@@ -40,7 +40,7 @@ router.get('/', function(req, res, next) {
   	});
 });
 
-//get specific object
+//get specific limit
 router.get('/:climit_id', function(req, res, next) {
 	connection.query('SELECT * from catlimite WHERE id = ' + req.params.climit_id, function (error, results, fields) {
 	  	if(error){
@@ -53,7 +53,8 @@ router.get('/:climit_id', function(req, res, next) {
   	});
 });
 
-//modify object
+//modify limit
+//TODO ne modifier que le nombre
 router.patch('/:climit_id', function(req, res, next) {
 	connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ', idCategorie = ' + req.body.idCategorie + ', siteEPF = ' + req.body.siteEPF +' WHERE id = ' + req.params.climit_id, function (error, results, fields) {
 	  	if(error){
@@ -66,7 +67,7 @@ router.patch('/:climit_id', function(req, res, next) {
   	});
 });
 
-//delete object
+//delete limit
 router.delete('/:climit_id', function(req, res, next) {
 	connection.query('DELETE FROM catlimite WHERE id = ' + req.params.climit_id, function (error, results, fields) {
 	  	if(error){
@@ -79,7 +80,8 @@ router.delete('/:climit_id', function(req, res, next) {
   	});
 });
 
-//create object
+//create limit
+//TODO vérifier que la limite n'est pas déjà entrée
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO catlimite (limite, idCategorie, siteEPF) VALUES (' + req.body.limite + ',' + req.body.idCategorie + ',' + req.body.siteEPF + ')', function (error, results, fields) {
 	  	if(error){

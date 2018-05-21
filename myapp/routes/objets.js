@@ -28,6 +28,7 @@ router.use(function(req, res, next) {
 });
 
 //get all objets
+//TODO donner que les actifs et créer une route qui donne les non actifs
 router.get('/', function(req, res, next) {
 	connection.query('SELECT * from objet', function (error, results, fields) {
 	  	if(error){
@@ -41,6 +42,8 @@ router.get('/', function(req, res, next) {
 });
 
 //get specific object
+//TODO balancer l'historique avec ou créer une route d'historique
+//TODO donner la catégorie avec
 router.get('/:objet_id', function(req, res, next) {
 	connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
 	  	if(error){
@@ -67,6 +70,7 @@ router.patch('/:objet_id', function(req, res, next) {
 });
 
 //delete object
+//TODO transformer en non actif
 router.delete('/:objet_id', function(req, res, next) {
 	connection.query('DELETE FROM objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
 	  	if(error){
@@ -80,6 +84,7 @@ router.delete('/:objet_id', function(req, res, next) {
 });
 
 //create object
+//TODO vérfier avec l'équipe Application que c'est peut être eux qui nous donnent l'id.
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + req.body.siteEPF + ',' + req.body.idCategorie + ',' + req.body.idUser +')', function (error, results, fields) {
 	  	if(error){

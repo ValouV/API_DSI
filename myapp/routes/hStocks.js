@@ -41,6 +41,7 @@ router.get('/', function(req, res, next) {
 });
 
 //get specific hprets
+//TODO récupérer les limites, objets, catégorie
 router.get('/:hstocks_id', function(req, res, next) {
 	connection.query('SELECT * from historiquestock WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
@@ -54,6 +55,7 @@ router.get('/:hstocks_id', function(req, res, next) {
 });
 
 //modify hprets
+//TODO supprimer cette route
 router.patch('/:hstocks_id', function(req, res, next) {
 	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
@@ -67,6 +69,7 @@ router.patch('/:hstocks_id', function(req, res, next) {
 });
 
 //delete hprets
+//TODO supprimer cette route ?
 router.delete('/:hstocks_id', function(req, res, next) {
 	connection.query('DELETE FROM historiquestock WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
@@ -80,8 +83,9 @@ router.delete('/:hstocks_id', function(req, res, next) {
 });
 
 //create hprets
-//TODO verify that objets has no hprets
-//TODO verify that objets !isStock
+//TODO verify that objets n'a pas de hStock
+//TODO verify that objets isStock
+//TODO mettre la date d'aujourd'hui par défault
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet) VALUES ("' + req.body.arrivée + '","' + req.body.depart + '",' + req.body.idUserAdmin + ',' + req.body.idObjet + ')', function (error, results, fields) {
 	  	if(error){
@@ -93,5 +97,7 @@ router.post('/', function(req, res, next) {
 	  	}
   	});
 });
+
+//TODO créer route de retour de stock
 
 module.exports = router;
