@@ -35,13 +35,13 @@ app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
 
 		//server connection ne pas toucher
-		/*host     : 'localhost',
+		host     : 'localhost',
 		user     : 'root',
 		password : '',
 		database : 'inventaire'
-		*/
+
 		//louis
-    	port     : '3306',
+    /*port     : '3306',
 		user     : 'root',
 		password : '',
 		database : 'bddv1'
