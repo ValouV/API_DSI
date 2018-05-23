@@ -2,6 +2,12 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 router.use(function(req, res, next) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -102,7 +108,7 @@ router.post('/', function(req, res, next) {
 
 
 router.post('/materiels', function(req, res, next) {
-   
+
 
   connection.query('SELECT id from categorie', function (error, results, fields) {
       if(error){
@@ -120,8 +126,8 @@ router.post('/materiels', function(req, res, next) {
   req.materielsobjet = [{"materiel_stock":0}];
 
 for (var i = 0; i < 3; i++) {
-  
-    
+
+
   connection.query("SELECT * from objet WHERE idCategorie='" + i + "' and siteEPF=1 and actif=1", function (error, results, fields) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -208,7 +214,7 @@ for (var i = 0; i < 3; i++) {
         //res.send(req.materielsobjet);
       } else{
         req.materielsobjet[0]["mini_montpellier"] = results[0].limite;
-        
+
       }
 
       if (req.materielsobjet[0]["mini_sceaux"] > req.materielsobjet[0]["etat_sceaux"]) {
@@ -223,7 +229,7 @@ for (var i = 0; i < 3; i++) {
         req.materielsobjet[0]["besoin_montpellier"] = req.materielsobjet[0]["mini_montpellier"] - req.materielsobjet[0]["etat_montpellier"];
       } else {req.materielsobjet[0]["besoin_montpellier"] = 0;}
 
-      req.materielsobjet[0]["total_besoin"] = req.materielsobjet[0]["besoin_sceaux"] + req.materielsobjet[0]["besoin_troyes"] + req.materielsobjet[0]["besoin_montpellier"]; 
+      req.materielsobjet[0]["total_besoin"] = req.materielsobjet[0]["besoin_sceaux"] + req.materielsobjet[0]["besoin_troyes"] + req.materielsobjet[0]["besoin_montpellier"];
 
         //res.send(req.materielsobjet);
         //req.materielsobjet.push({"materiel_stock":2});
@@ -231,7 +237,7 @@ for (var i = 0; i < 3; i++) {
       }
     });
 
-    
+
 
 });
 

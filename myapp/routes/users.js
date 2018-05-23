@@ -2,6 +2,11 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 //get specific user
 //TODO token avec permissions différentes
@@ -68,7 +73,7 @@ router.get('/', function(req, res, next) {
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
 	  	} else {
-	  		
+
 	  		//affiche en console l'id et l'email de l'user qui a genere le token
 	  		//console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
