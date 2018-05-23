@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 //get specific user
 //TODO token avec permissions différentes
 //TODO voir comment récupérer user via le token
+//TODO enlever le password
 router.post('/connexion', function(req, res, next) {
 	connection.query('SELECT * from user WHERE email=? and password=?',[req.body.email,req.body.password], function (error, results, fields) {
 	  	if(error){
@@ -27,7 +28,8 @@ router.post('/connexion', function(req, res, next) {
 				    res.json({
 				    	success: true,
 				    	message: 'Enjoy your token!',
-				    	token: token
+				    	token: token,
+							user: results
 				    });
 			}
 	  	}
