@@ -39,20 +39,20 @@ app.use(function(req, res, next){
 		host     : 'localhost',
 		user     : 'root',
 		password : '',
-		database : 'inventaire'
+		database : 'inventaire',
 
 		//louis
     /*port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1'*/
+		database : 'bddv1',
 
 		//val
-		/*port     : '8889',
+		port     : '8889',
 		user     : 'root',
 		password : 'root',
-		database : 'Inventaire_DSI'*/
-
+		database : 'Inventaire_DSI',*/
+		multipleStatements: true
 
 	});
 	connection.connect();

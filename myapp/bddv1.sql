@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le :  lun. 21 mai 2018 à 12:21
+-- Généré le :  mer. 23 mai 2018 à 16:06
 -- Version du serveur :  5.6.38
 -- Version de PHP :  7.0.12
 
@@ -55,6 +55,15 @@ CREATE TABLE `categorie` (
   `nom` varchar(255) NOT NULL,
   `marque` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `categorie`
+--
+
+INSERT INTO `categorie` (`id`, `nom`, `marque`) VALUES
+(2, 'écran 25 pouces', 'HP'),
+(3, 'écran 25 pouces', 'Apple'),
+(10, 'cuillère', 'pour manger tes grands morts');
 
 -- --------------------------------------------------------
 
@@ -161,7 +170,7 @@ CREATE TABLE `objet` (
 --
 
 INSERT INTO `objet` (`id`, `actif`, `isStock`, `commentaire`, `siteEPF`, `idCategorie`, `idUser`) VALUES
-(1007, 0, 0, 'Nouvel objet numéro 353', 1, 1, 1),
+(2, 1, 0, 'Test API tes grands morts Victor', 1, 2, 1),
 (10000, 1, 1, 'yo', 1, 10, 10),
 (10001, 4, 1, 'ah', 4, 4, 1),
 (10002, 4, 1, 'ah', 4, 4, 1),
@@ -270,7 +279,7 @@ ALTER TABLE `alertestock`
 -- AUTO_INCREMENT pour la table `categorie`
 --
 ALTER TABLE `categorie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT pour la table `catlimite`

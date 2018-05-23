@@ -23,8 +23,8 @@ router.use(function(req, res, next) {
     // if there is no token
     // return an error
     return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
+      success: false,
+      message: 'No token provided.'
     });
   }
 });
@@ -32,98 +32,97 @@ router.use(function(req, res, next) {
 //get all objets
 //TODO donner que les actifs et créer une route qui donne les non actifs
 router.get('/', function(req, res, next) {
-	connection.query('SELECT * from objet', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('SELECT * from objet', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 //get specific object
 //TODO balancer l'historique avec ou créer une route d'historique
 //TODO donner la catégorie avec
 router.get('/:objet_id', function(req, res, next) {
-	connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-        //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 //modify object
 router.patch('/:objet_id', function(req, res, next) {
-	connection.query('UPDATE objet SET actif = ' + req.body.actif + ', isStock = ' + req.body.isStock + ', commentaire = "' + req.body.commentaire +'", siteEPF = ' + req.body.siteEPF + ', idCategorie = ' + req.body.idCategorie + ', idUser = ' + req.body.idUser + ' WHERE id = ' + req.params.objet_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('UPDATE objet SET actif = ' + req.body.actif + ', isStock = ' + req.body.isStock + ', commentaire = "' + req.body.commentaire +'", siteEPF = ' + req.body.siteEPF + ', idCategorie = ' + req.body.idCategorie + ', idUser = ' + req.body.idUser + ' WHERE id = ' + req.params.objet_id, function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 //delete object
 //TODO transformer en non actif
 router.delete('/:objet_id', function(req, res, next) {
-	connection.query('DELETE FROM objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('DELETE FROM objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 //create object
 //TODO vérfier avec l'équipe Application que c'est peut être eux qui nous donnent l'id.
 router.post('/', function(req, res, next) {
-	connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + req.body.siteEPF + ',' + req.body.idCategorie + ',' + req.body.idUser +')', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + req.body.siteEPF + ',' + req.body.idCategorie + ',' + req.body.idUser +')', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
-
 
 
 router.post('/materiels', function(req, res, next) {
 
 
   connection.query('SELECT id from categorie', function (error, results, fields) {
-      if(error){
-        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-        //If there is error, we send the error in the error section with 500 status
-      } else {
-        req.nbrcategorie=results.length;
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      req.nbrcategorie=results.length;
 
-      }
+    }
 
-    });
+  });
 
 
 
   req.materielsobjet = [{"materiel_stock":0}];
 
-for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < 3; i++) {
 
 
-  connection.query("SELECT * from objet WHERE idCategorie='" + i + "' and siteEPF=1 and actif=1", function (error, results, fields) {
+    connection.query("SELECT * from objet WHERE idCategorie='" + i + "' and siteEPF=1 and actif=1", function (error, results, fields) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
         //If there is error, we send the error in the error section with 500 status
@@ -131,48 +130,48 @@ for (var i = 0; i < 3; i++) {
         if (!results.length) {
           req.materielsobjet.forEach [i]["etat_sceaux"] = 0;
         } else {
-      //res.send(JSON.stringify({"status": 200, "error": null, "response": results.length}));
+          //res.send(JSON.stringify({"status": 200, "error": null, "response": results.length}));
 
-      req.materielsobjet[i]["etat_sceaux"] = results.length;
-      //req.materielsobjet.push({"materiel_stock":i});
-      //res.send(materielsobjet);
-      }
+          req.materielsobjet[i]["etat_sceaux"] = results.length;
+          //req.materielsobjet.push({"materiel_stock":i});
+          //res.send(materielsobjet);
+        }
       }
     });
-  req.materielsobjet.push({"materiel_stock":i+1});
-}
-    connection.query('SELECT * from objet WHERE idCategorie=1 and siteEPF=2 and actif=1', function (error, results, fields) {
-      if(error){
-        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-        //If there is error, we send the error in the error section with 500 status
+    req.materielsobjet.push({"materiel_stock":i+1});
+  }
+  connection.query('SELECT * from objet WHERE idCategorie=1 and siteEPF=2 and actif=1', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      if (!results.length) {
+        req.materielsobjet[0]["etat_troyes"] = 0;
       } else {
-        if (!results.length) {
-          req.materielsobjet[0]["etat_troyes"] = 0;
-        } else {
-          req.materielsobjet[0]["etat_troyes"] = results.length;
+        req.materielsobjet[0]["etat_troyes"] = results.length;
       }
-      }
-    });
+    }
+  });
 
-    connection.query('SELECT * from objet WHERE idCategorie=1 and siteEPF=3 and actif=1', function (error, results, fields) {
-      if(error){
-        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-        //If there is error, we send the error in the error section with 500 status
+  connection.query('SELECT * from objet WHERE idCategorie=1 and siteEPF=3 and actif=1', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      if (!results.length) {
+        req.materielsobjet[0]["etat_montpellier"] = 0;
       } else {
-        if (!results.length) {
-          req.materielsobjet[0]["etat_montpellier"] = 0;
-        } else {
-          req.materielsobjet[0]["etat_montpellier"] = results.length;
+        req.materielsobjet[0]["etat_montpellier"] = results.length;
       }
-      }
-    });
+    }
+  });
 
-    connection.query('SELECT limite from catlimite WHERE idCategorie=1 and siteEPF=1', function (error, results, fields) {
-      if(error){
-        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-        //If there is error, we send the error in the error section with 500 status
-      } else {
-            if (!results.length){
+  connection.query('SELECT limite from catlimite WHERE idCategorie=1 and siteEPF=1', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      if (!results.length){
         req.materielsobjet[0]["mini_sceaux"] = 0;
         res.send(req.materielsobjet);
       } else{
@@ -180,15 +179,15 @@ for (var i = 0; i < 3; i++) {
         //res.send(req.materielsobjet);
       }
 
-      }
-    });
+    }
+  });
 
-    connection.query('SELECT limite from catlimite WHERE idCategorie=1 and siteEPF=2', function (error, results, fields) {
-      if(error){
-        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-        //If there is error, we send the error in the error section with 500 status
-      } else {
-            if (!results.length){
+  connection.query('SELECT limite from catlimite WHERE idCategorie=1 and siteEPF=2', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      if (!results.length){
         req.materielsobjet[0]["mini_troyes"] = 0;
         //res.send(req.materielsobjet);
       } else{
@@ -196,15 +195,15 @@ for (var i = 0; i < 3; i++) {
         //res.send(req.materielsobjet);
       }
 
-      }
-    });
+    }
+  });
 
-    connection.query('SELECT limite from catlimite WHERE idCategorie=1 and siteEPF=3', function (error, results, fields) {
-      if(error){
-        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-        //If there is error, we send the error in the error section with 500 status
-      } else {
-            if (!results.length){
+  connection.query('SELECT limite from catlimite WHERE idCategorie=1 and siteEPF=3', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      if (!results.length){
         req.materielsobjet[0]["mini_montpellier"] = 0;
         //res.send(req.materielsobjet);
       } else{
@@ -226,14 +225,61 @@ for (var i = 0; i < 3; i++) {
 
       req.materielsobjet[0]["total_besoin"] = req.materielsobjet[0]["besoin_sceaux"] + req.materielsobjet[0]["besoin_troyes"] + req.materielsobjet[0]["besoin_montpellier"];
 
-        //res.send(req.materielsobjet);
-        //req.materielsobjet.push({"materiel_stock":2});
-        res.send(req.materielsobjet);
+      //res.send(req.materielsobjet);
+      //req.materielsobjet.push({"materiel_stock":2});
+      res.send(req.materielsobjet);
+    }
+  });
+
+
+
+});
+
+
+
+
+router.get('/state/:objet_id', function(req, res, next){
+  connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, monObjet, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      if (!monObjet.length){
+        res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":0 }}));
+      } else {
+        var objet = monObjet[0];
+        connection.query('SELECT * from categorie WHERE id = ' + objet.idCategorie + ';', function(error3, maCategorie, fields3){
+          if(error){
+            res.send(JSON.stringify({"status": 500, "error": error3, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+          } else {
+            var categorie = maCategorie[0];
+            if (objet.actif == 0){
+              res.send(JSON.stringify({"status": 200, "error": null, "response":{ "mode":1 , objet, categorie }}));
+            } else {
+              if (objet.isStock == 1) {
+                res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie }}));
+              } else {
+                connection.query('SELECT * from historiquepret WHERE idObjet = ' + req.params.objet_id + ' AND retourEffectif = "0000-00-00 00:00:00"', function(error2, monPret, fields2){
+                  if(error){
+                    res.send(JSON.stringify({"status": 500, "error": error2, "response": null}));
+                    //If there is error, we send the error in the error section with 500 status
+                  } else {
+                    if (!monPret.length){
+                      res.send(JSON.stringify({"status": 200, "error": null, "response":  { "mode":3 , objet, categorie }}));
+                    } else {
+                      var pret = monPret[0];
+                      res.send(JSON.stringify({"status": 200, "error": null, "response":  { "mode":4 , objet, categorie, pret }}));
+                    }
+                  }
+                });
+              }
+            }
+          }
+        });
       }
-    });
-
-
-
+    }
+  });
 });
 
 module.exports = router;
