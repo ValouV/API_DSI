@@ -41,12 +41,12 @@ app.use(function(req, res, next){
 		password : '',
 		database : 'inventaire',
 
-		//louis
-    /*port     : '3306',
+	/*	//louis
+    port     : '3306',
 		user     : 'root',
 		password : '',
 		database : 'bddv1',
-
+/*
 		//val
 		port     : '8889',
 		user     : 'root',
