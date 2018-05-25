@@ -52,18 +52,17 @@ CREATE TABLE `alertestock` (
 
 CREATE TABLE `categorie` (
   `id` int(11) NOT NULL,
-  `nom` varchar(255) NOT NULL,
-  `marque` varchar(255) NOT NULL
+  `nom` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `categorie`
 --
 
-INSERT INTO `categorie` (`id`, `nom`, `marque`) VALUES
-(2, 'écran 25 pouces', 'HP'),
-(3, 'écran 25 pouces', 'Apple'),
-(10, 'cuillère', 'pour manger tes grands morts');
+INSERT INTO `categorie` (`id`, `nom`) VALUES
+(2, 'écran 25 pouces'),
+(3, 'écran 25 pouces'),
+(10, 'cuillère');
 
 -- --------------------------------------------------------
 

@@ -195,7 +195,7 @@ router.get('/:cat_id', function(req, res, next) {
 
 //modify categorie
 router.patch('/:cat_id', function(req, res, next) {
-	connection.query('UPDATE categorie SET nom = "' + req.body.nom + '", marque = "' + req.body.marque  +'" WHERE id = ' + req.params.cat_id, function (error, results, fields) {
+	connection.query('UPDATE categorie SET nom = "' + req.body.nom + '" WHERE id = ' + req.params.cat_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -223,7 +223,7 @@ router.delete('/:cat_id', function(req, res, next) {
 //create categorie
 //TODO vérifier que la catégorie n'existe pas
 router.post('/', function(req, res, next) {
-	connection.query('INSERT INTO categorie (nom, marque) VALUES ("' + req.body.nom + '","' + req.body.marque + '")', function (error, results, fields) {
+	connection.query('INSERT INTO categorie (nom) VALUES ("' + req.body.nom + '")', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
