@@ -6,10 +6,8 @@ var jwt = require('jsonwebtoken');
 
 //get specific user
 //TODO token avec permissions différentes
-//TODO voir comment récupérer user via le token
-//TODO enlever le password
 router.post('/connexion', function(req, res, next) {
-	connection.query('SELECT * from user WHERE email=? and password=?',[req.body.email,req.body.password], function (error, results, fields) {
+	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE email=? and password=?',[req.body.email,req.body.password], function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -64,9 +62,8 @@ router.use(function(req, res, next) {
 });
 
 //get all users
-//TODO enlever password
 router.get('/', function(req, res, next) {
-	connection.query('SELECT * from user', function (error, results, fields) {
+	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -81,9 +78,8 @@ router.get('/', function(req, res, next) {
 });
 
 //get specific user
-//TODO enlever password
 router.get('/:user_id', function(req, res, next) {
-	connection.query('SELECT * from user WHERE id = ' + req.params.user_id, function (error, results, fields) {
+	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE id = ' + req.params.user_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
