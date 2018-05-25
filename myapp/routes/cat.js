@@ -41,62 +41,7 @@ router.get('/', function(req, res, next) {
   	});
 });
 
-//get specific categorie
-//TODO envoyer les informations de nombre d'objets en stock, en flotte de pret et en pret, les limites associées
-router.get('/:cat_id', function(req, res, next) {
-	connection.query('SELECT * from categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
-});
-
-//modify categorie
-router.patch('/:cat_id', function(req, res, next) {
-	connection.query('UPDATE categorie SET nom = "' + req.body.nom + '", marque = "' + req.body.marque  +'" WHERE id = ' + req.params.cat_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
-});
-
-//delete categorie
-//TODO ne pas accepter si objets dans la categorie
-router.delete('/:cat_id', function(req, res, next) {
-	connection.query('DELETE FROM categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
-});
-
-//create categorie
-//TODO vérifier que la catégorie n'existe pas
-router.post('/', function(req, res, next) {
-	connection.query('INSERT INTO categorie (nom, marque) VALUES ("' + req.body.nom + '","' + req.body.marque + '")', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
-});
-
-router.post('/stocks', function(req, res, next) {
+router.get('/stocks', function(req, res, next) {
   connection.query('SELECT id, nom from categorie', function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -233,5 +178,61 @@ router.post('/stocks', function(req, res, next) {
 
 
 });
+
+//get specific categorie
+//TODO envoyer les informations de nombre d'objets en stock, en flotte de pret et en pret, les limites associées
+router.get('/:cat_id', function(req, res, next) {
+	connection.query('SELECT * from categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
+	  	if(error){
+	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+	  		//If there is error, we send the error in the error section with 500 status
+	  	} else {
+  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+  			//If there is no error, all is good and response is 200OK.
+	  	}
+  	});
+});
+
+//modify categorie
+router.patch('/:cat_id', function(req, res, next) {
+	connection.query('UPDATE categorie SET nom = "' + req.body.nom + '", marque = "' + req.body.marque  +'" WHERE id = ' + req.params.cat_id, function (error, results, fields) {
+	  	if(error){
+	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+	  		//If there is error, we send the error in the error section with 500 status
+	  	} else {
+  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+  			//If there is no error, all is good and response is 200OK.
+	  	}
+  	});
+});
+
+//delete categorie
+//TODO ne pas accepter si objets dans la categorie
+router.delete('/:cat_id', function(req, res, next) {
+	connection.query('DELETE FROM categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
+	  	if(error){
+	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+	  		//If there is error, we send the error in the error section with 500 status
+	  	} else {
+  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+  			//If there is no error, all is good and response is 200OK.
+	  	}
+  	});
+});
+
+//create categorie
+//TODO vérifier que la catégorie n'existe pas
+router.post('/', function(req, res, next) {
+	connection.query('INSERT INTO categorie (nom, marque) VALUES ("' + req.body.nom + '","' + req.body.marque + '")', function (error, results, fields) {
+	  	if(error){
+	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+	  		//If there is error, we send the error in the error section with 500 status
+	  	} else {
+  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+  			//If there is no error, all is good and response is 200OK.
+	  	}
+  	});
+});
+
 
 module.exports = router;
