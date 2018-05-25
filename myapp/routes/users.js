@@ -5,7 +5,6 @@ var jwt = require('jsonwebtoken');
 //TODO hash password
 
 //get specific user
-//TODO token avec permissions différentes
 router.post('/connexion', function(req, res, next) {
 	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE email=? and password=?',[req.body.email,req.body.password], function (error, results, fields) {
 	  	if(error){
@@ -61,6 +60,44 @@ router.use(function(req, res, next) {
   }
 });
 
+router.get('/me', function(req, res, next){
+	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE id = ' + jwt.decode(req.token).iduser, function (error, results, fields) {
+			if(error){
+				res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+				//If there is error, we send the error in the error section with 500 status
+			} else {
+				res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+				//If there is no error, all is good and response is 200OK.
+			}
+		});
+});
+
+router.use(function(req, res, next) {
+  // check header or url parameters or post parameters for token
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  // decode token
+  if (token) {
+    // verifies secret and checks exp
+    connection.query('SELECT role from user WHERE id = '+ jwt.decode(req.token).iduser, function (error, results, fields) {
+			if (results.role == 1){
+				next();
+			} else {
+				return res.status(403).send({
+		        success: false,
+		        message: 'You should be admin to modify users.'
+		    });
+			}
+		});
+  } else {
+    // if there is no token
+    // return an error
+    return res.status(403).send({
+        success: false,
+        message: 'No token provided.'
+    });
+  }
+});
+
 //get all users
 router.get('/', function(req, res, next) {
 	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user', function (error, results, fields) {
@@ -91,19 +128,20 @@ router.get('/:user_id', function(req, res, next) {
 });
 
 //modify user
-//TODO vérifier qu'on a tous les paramètres
-//TODO emepecher la modification du mdp
-
 router.patch('/:user_id', function(req, res, next) {
-	connection.query('UPDATE user SET email = ' + req.body.email + ', nom = ' + req.body.nom + ', prenom = "' + req.body.prenom +'", password = ' + req.body.password + ', role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+	if (req.body.email !== undefined && req.body.nom !== undefined && req.body.prenom !== undefined && req.body.password !== undefined && req.body.role !== undefined && req.body.siteEPF !== undefined){
+		connection.query('UPDATE user SET email = ' + req.body.email + ', nom = ' + req.body.nom + ', prenom = "' + req.body.prenom +'", password = ' + req.body.password + ', role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
+			if(error){
+				res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+				//If there is error, we send the error in the error section with 500 status
+			} else {
+				res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+				//If there is no error, all is good and response is 200OK.
+			}
+		});
+	} else {
+		res.send(JSON.stringify({"status": 200, "error": null, "response": "You should give all parameters"}));
+	}
 });
 
 //delete user
@@ -120,18 +158,26 @@ router.delete('/:user_id', function(req, res, next) {
 });
 
 //create user
-//TODO vérifier email existe pas
-//TODO vérfier qu'on a tous les paramètres
 router.post('/', function(req, res, next) {
-	connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES ("' + req.body.email + '","' + req.body.nom + '","' + req.body.prenom +'","' + req.body.password + '",' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+	if (req.body.email !== undefined && req.body.nom !== undefined && req.body.prenom !== undefined && req.body.password !== undefined && req.body.role !== undefined && req.body.siteEPF !== undefined){
+		connection.query('SELECT nom from user WHERE email =' + req.body.email, function (error, results, fields) {
+			if(results.length){
+				res.send(JSON.stringify({"status": 200, "error": null, "response": "An account already exists with this email."}));
+			} else {
+				connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES ("' + req.body.email + '","' + req.body.nom + '","' + req.body.prenom +'","' + req.body.password + '",' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
+					if(error){
+						res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+						//If there is error, we send the error in the error section with 500 status
+					} else {
+						res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+						//If there is no error, all is good and response is 200OK.
+					}
+				});
+			}
+		});
+	} else {
+		res.send(JSON.stringify({"status": 200, "error": null, "response": "You should give all parameters"}));
+	}
 });
 
 
