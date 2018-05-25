@@ -79,7 +79,7 @@ router.use(function(req, res, next) {
   if (token) {
     // verifies secret and checks exp
     connection.query('SELECT role from user WHERE id = '+ jwt.decode(req.token).iduser, function (error, results, fields) {
-			if (results.role == 1){
+			if (results[0].role == 1){
 				next();
 			} else {
 				return res.status(403).send({
