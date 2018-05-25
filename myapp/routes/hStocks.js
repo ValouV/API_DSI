@@ -89,6 +89,7 @@ router.delete('/:hstocks_id', function(req, res, next) {
 //TODO verify that objets n'a pas de hStock
 //TODO verify that objets isStock
 //TODO mettre la date d'aujourd'hui par défault
+//TODO mettre idUser via token
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet) VALUES ("' + req.body.arrivée + '","' + req.body.depart + '",' + req.body.idUserAdmin + ',' + req.body.idObjet + ')', function (error, results, fields) {
 	  	if(error){

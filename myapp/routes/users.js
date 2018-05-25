@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
+//TODO hash password
 
 //get specific user
 //TODO token avec permissions différentes

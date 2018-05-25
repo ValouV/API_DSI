@@ -88,6 +88,7 @@ router.delete('/:hprets_id', function(req, res, next) {
 //TODO verify that objets has no hprets
 //TODO verify that objets !isStock
 //TODO mettre la date d'aujourd'hui par défault
+//TODO mettre idUser nous même
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa) VALUES ("' + req.body.depart + '","' + req.body.retourPrevu + '","' + req.body.retourEffectif +'",' + req.body.idUserAdmin + ',' + req.body.idObjet + ',' + req.body.idUserHelisa +')', function (error, results, fields) {
 	  	if(error){
