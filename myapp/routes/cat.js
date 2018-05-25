@@ -158,7 +158,7 @@ router.get('/stocks', function(req, res, next) {
               req.materielsobjet[i]["besoin_montpellier"] = req.materielsobjet[i]["mini_montpellier"] - req.materielsobjet[i]["etat_montpellier"];
             } else {req.materielsobjet[i]["besoin_montpellier"] = 0;}
 
-            req.materielsobjet[i]["total_besoin"] = req.materielsobjet[i]["besoin_sceaux"] + req.materielsobjet[i]["besoin_troyes"] + req.materielsobjet[i]["besoin_montpellier"];
+            req.materielsobjet[i]["total_besoins"] = req.materielsobjet[i]["besoin_sceaux"] + req.materielsobjet[i]["besoin_troyes"] + req.materielsobjet[i]["besoin_montpellier"];
 
             //res.send(req.materielsobjet);
             //req.materielsobjet.push({"materiel_stock":2});
