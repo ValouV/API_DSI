@@ -91,6 +91,7 @@ router.get('/:user_id', function(req, res, next) {
 });
 
 //modify user
+//TODO vérifer qu'on a tous les paramètres
 router.patch('/:user_id', function(req, res, next) {
 	connection.query('UPDATE user SET email = ' + req.body.email + ', nom = ' + req.body.nom + ', prenom = "' + req.body.prenom +'", password = ' + req.body.password + ', role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
 	  	if(error){
@@ -118,6 +119,7 @@ router.delete('/:user_id', function(req, res, next) {
 
 //create user
 //TODO vérifier email existe pas
+//TODO vérfier qu'on a tous les paramètres
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES ("' + req.body.email + '","' + req.body.nom + '","' + req.body.prenom +'","' + req.body.password + '",' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
 	  	if(error){

@@ -46,6 +46,7 @@ router.get('/', function(req, res, next) {
 //get specific object
 //TODO balancer l'historique avec ou créer une route d'historique
 //TODO donner la catégorie avec
+//TODO vérifier qu'on a tous les paramètres
 router.get('/:objet_id', function(req, res, next) {
   connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
     if(error){
@@ -61,6 +62,7 @@ router.get('/:objet_id', function(req, res, next) {
 
 //modify object
 //TODO récupérer l'id utilisateur du token
+//TODO vérifer qu'on a tous les paramètres
 router.patch('/:objet_id', function(req, res, next) {
   connection.query('UPDATE objet SET actif = ' + req.body.actif + ', isStock = ' + req.body.isStock + ', commentaire = "' + req.body.commentaire +'", siteEPF = ' + req.body.siteEPF + ', idCategorie = ' + req.body.idCategorie + ', idUser = ' + req.body.idUser + ' WHERE id = ' + req.params.objet_id, function (error, results, fields) {
     if(error){
@@ -88,7 +90,7 @@ router.delete('/:objet_id', function(req, res, next) {
 });
 
 //create object
-//TODO vérfier avec l'équipe Application que c'est peut être eux qui nous donnent l'id. Si oui vérifier id
+//TODO vérfier avec l'équipe Application que c'est peut être eux qui nous donnent l'id. Si oui vérifier id et créer route prochain id
 router.post('/', function(req, res, next) {
   connection.query('SELECT siteEPF from user WHERE id = ' + jwt.decode(req.token).iduser, function (error, site, fields2) {
     if(error){

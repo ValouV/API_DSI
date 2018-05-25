@@ -194,6 +194,7 @@ router.get('/:cat_id', function(req, res, next) {
 });
 
 //modify categorie
+//TODO vérifier qu'on a tous les paramètres
 router.patch('/:cat_id', function(req, res, next) {
 	connection.query('UPDATE categorie SET nom = "' + req.body.nom + '" WHERE id = ' + req.params.cat_id, function (error, results, fields) {
 	  	if(error){
@@ -222,6 +223,7 @@ router.delete('/:cat_id', function(req, res, next) {
 
 //create categorie
 //TODO vérifier que la catégorie n'existe pas
+//TODO vérfier qu'on a tous les paramètres
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO categorie (nom) VALUES ("' + req.body.nom + '")', function (error, results, fields) {
 	  	if(error){

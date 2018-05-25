@@ -56,6 +56,7 @@ router.get('/:climit_id', function(req, res, next) {
 
 //modify limit
 //TODO ne modifier que le nombre
+//TODO vérifier qu'on a tous les paramètres
 router.patch('/:climit_id', function(req, res, next) {
 	connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ', idCategorie = ' + req.body.idCategorie + ', siteEPF = ' + req.body.siteEPF +' WHERE id = ' + req.params.climit_id, function (error, results, fields) {
 	  	if(error){
@@ -83,6 +84,7 @@ router.delete('/:climit_id', function(req, res, next) {
 
 //create limit
 //TODO vérifier que la limite n'est pas déjà entrée
+//TODO vérifier qu'on a tous les paramètres
 router.post('/', function(req, res, next) {
 	connection.query('INSERT INTO catlimite (limite, idCategorie, siteEPF) VALUES (' + req.body.limite + ',' + req.body.idCategorie + ',' + req.body.siteEPF + ')', function (error, results, fields) {
 	  	if(error){

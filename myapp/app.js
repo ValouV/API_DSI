@@ -64,6 +64,7 @@ app.use(function(req, res, next){
 //TODO mail alertes
 //TODO routes d'alertes
 //TODO routes admin
+//TODO notifications
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
