@@ -91,7 +91,9 @@ router.get('/:user_id', function(req, res, next) {
 });
 
 //modify user
-//TODO vérifer qu'on a tous les paramètres
+//TODO vérifier qu'on a tous les paramètres
+//TODO emepecher la modification du mdp
+
 router.patch('/:user_id', function(req, res, next) {
 	connection.query('UPDATE user SET email = ' + req.body.email + ', nom = ' + req.body.nom + ', prenom = "' + req.body.prenom +'", password = ' + req.body.password + ', role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
 	  	if(error){
