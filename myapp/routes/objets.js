@@ -30,9 +30,8 @@ router.use(function(req, res, next) {
 });
 
 //get all active objets
-//TODO donner la catégorie avec
 router.get('/', function(req, res, next) {
-  connection.query('SELECT * from objet WHERE actif = 1', function (error, results, fields) {
+  connection.query('SELECT objet.*, categorie.nom AS "Categorie Nom", user.nom AS "User Nom", user.prenom AS "User Prenom" from objet, categorie, user WHERE objet.idCategorie = categorie.id AND objet.idUser = user.id AND objet.actif = 1', function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
@@ -45,7 +44,7 @@ router.get('/', function(req, res, next) {
 
 //get all objets
 router.get('/all', function(req, res, next) {
-  connection.query('SELECT * from objet', function (error, results, fields) {
+  connection.query('SELECT objet.*, categorie.nom AS "Categorie Nom", user.nom AS "User Nom", user.prenom AS "User Prenom" FROM objet, categorie, user WHERE objet.idCategorie = categorie.id AND objet.idUser = user.id', function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
@@ -57,11 +56,8 @@ router.get('/all', function(req, res, next) {
 });
 
 //get specific object
-//TODO balancer l'historique avec ou créer une route d'historique
-//TODO donner la catégorie avec
-//TODO vérifier qu'on a tous les paramètres
 router.get('/:objet_id', function(req, res, next) {
-  connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
+  connection.query('SELECT objet.*, categorie.nom AS "Categorie Nom", user.nom AS "User Nom", user.prenom AS "User Prenom" FROM objet, categorie, user WHERE objet.id = ' + req.params.objet_id + ' AND objet.idCategorie = categorie.id AND objet.idUser = user.id', function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
@@ -73,10 +69,31 @@ router.get('/:objet_id', function(req, res, next) {
   });
 });
 
+//TODO ajouter nom user Helisa in Pret
+router.get('/:objet_id/historique', function(req, res, next) {
+  connection.query('SELECT * from historiquepret WHERE historiquepret.idObjet = ' + req.params.objet_id, function (error, historiquepret, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      connection.query('SELECT * from historiquestock WHERE historiquestock.idObjet = ' + req.params.objet_id, function (error, historiquestock, fields) {
+        if(error){
+          res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+          //If there is error, we send the error in the error section with 500 status
+        } else {
+          res.send(JSON.stringify({"status": 200, "error": null, "response": {historiquepret, historiquestock}}));
+          //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
+          //If there is no error, all is good and response is 200OK.
+        }
+      });
+    }
+  });
+});
+
 //modify object
 router.patch('/:objet_id', function(req, res, next) {
   if (req.body.actif !== undefined && req.body.isStock !== undefined && req.body.commentaire !== undefined && req.body.idCategorie !== undefined){
-    connection.query('SELECT siteEPF from user WHERE id = ' + jwt.decode(req.token).iduser, function (error, site, fields2) {
+    connection.query('SELECT siteEPF FROM user WHERE id = ' + jwt.decode(req.token).iduser, function (error, site, fields2) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": "User not recognized"}));
         //If there is error, we send the error in the error section with 500 status
@@ -98,9 +115,8 @@ router.patch('/:objet_id', function(req, res, next) {
 });
 
 //delete object
-//TODO transformer en non actif
 router.delete('/:objet_id', function(req, res, next) {
-  connection.query('DELETE FROM objet WHERE id = ' + req.params.objet_id, function (error, results, fields) {
+  connection.query('UPDATE objet SET actif = 0 WHERE id = ' + req.params.objet_id, function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
