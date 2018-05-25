@@ -29,9 +29,22 @@ router.use(function(req, res, next) {
   }
 });
 
-//get all objets
-//TODO donner que les actifs et créer une route qui donne les non actifs
+//get all active objets
+//TODO donner la catégorie avec
 router.get('/', function(req, res, next) {
+  connection.query('SELECT * from objet WHERE actif = 1', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
+});
+
+//get all objets
+router.get('/all', function(req, res, next) {
   connection.query('SELECT * from objet', function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -61,18 +74,27 @@ router.get('/:objet_id', function(req, res, next) {
 });
 
 //modify object
-//TODO récupérer l'id utilisateur du token
-//TODO vérifer qu'on a tous les paramètres
 router.patch('/:objet_id', function(req, res, next) {
-  connection.query('UPDATE objet SET actif = ' + req.body.actif + ', isStock = ' + req.body.isStock + ', commentaire = "' + req.body.commentaire +'", siteEPF = ' + req.body.siteEPF + ', idCategorie = ' + req.body.idCategorie + ', idUser = ' + req.body.idUser + ' WHERE id = ' + req.params.objet_id, function (error, results, fields) {
-    if(error){
-      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-      //If there is error, we send the error in the error section with 500 status
-    } else {
-      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-      //If there is no error, all is good and response is 200OK.
-    }
-  });
+  if (req.body.actif !== undefined && req.body.isStock !== undefined && req.body.commentaire !== undefined && req.body.idCategorie !== undefined){
+    connection.query('SELECT siteEPF from user WHERE id = ' + jwt.decode(req.token).iduser, function (error, site, fields2) {
+      if(error){
+        res.send(JSON.stringify({"status": 500, "error": error, "response": "User not recognized"}));
+        //If there is error, we send the error in the error section with 500 status
+      } else {
+        connection.query('UPDATE objet SET actif = ' + req.body.actif + ', isStock = ' + req.body.isStock + ', commentaire = "' + req.body.commentaire +'", siteEPF = ' + site[0].siteEPF + ', idCategorie = ' + req.body.idCategorie + ', idUser = ' + jwt.decode(req.token).iduser + ' WHERE id = ' + req.params.objet_id, function (error, results, fields) {
+          if(error){
+            res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+          } else {
+            res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+            //If there is no error, all is good and response is 200OK.
+          }
+        });
+      }
+    });
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": null, "response": "Please provide all parameters"}));
+  }
 });
 
 //delete object
