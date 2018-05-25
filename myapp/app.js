@@ -45,10 +45,10 @@ app.use(function(req, res, next){
     port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1',
-/*
+		database : 'bddv1',*/
+
 		//val
-		port     : '8889',
+		/*port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI',*/
@@ -63,6 +63,7 @@ app.use(function(req, res, next){
 //TODO route Hélisa
 //TODO mail alertes
 //TODO routes d'alertes
+//TODO routes admin
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
