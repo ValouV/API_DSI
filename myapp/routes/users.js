@@ -160,7 +160,7 @@ router.delete('/:user_id', function(req, res, next) {
 //create user
 router.post('/', function(req, res, next) {
 	if (req.body.email !== undefined && req.body.nom !== undefined && req.body.prenom !== undefined && req.body.password !== undefined && req.body.role !== undefined && req.body.siteEPF !== undefined){
-		connection.query('SELECT nom from user WHERE email =' + req.body.email, function (error, results, fields) {
+		connection.query('SELECT * FROM user WHERE email ="' + req.body.email + '";', function (error, results, fields) {
 			if(results.length){
 				res.send(JSON.stringify({"status": 200, "error": null, "response": "An account already exists with this email."}));
 			} else {
