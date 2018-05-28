@@ -31,12 +31,12 @@ router.use(function(req, res, next) {
 
 //get all active objets
 router.get('/', function(req, res, next) {
-  connection.query('SELECT * from alertepret', function (error, alertesPret, fields) {
+  connection.query('SELECT alertepret.*, historiquepret.idUserAdmin, objet.id AS idObjet from alertepret, historiquepret, objet WHERE alertepret.idHistoriquePret = historiquepret.id AND historiquepret.idObjet = objet.id', function (error, alertesPret, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
     } else {
-      connection.query('SELECT * from alertestock', function (error, alertesStock, fields) {
+      connection.query('SELECT alertestock.*, historiquestock.idUserAdmin, objet.id AS idObjet from alertestock, historiquestock, objet WHERE alertestock.idHistoriqueStock = historiquestock.id AND historiquestock.idObjet = objet.id', function (error, alertesStock, fields) {
         if(error){
           res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
           //If there is error, we send the error in the error section with 500 status
