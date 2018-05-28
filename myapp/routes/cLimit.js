@@ -30,7 +30,7 @@ router.use(function(req, res, next) {
 
 //get all limits
 router.get('/', function(req, res, next) {
-	connection.query('SELECT * from catlimite', function (error, results, fields) {
+	connection.query('SELECT catlimite.*, categorie.nom from catlimite, categorie WHERE catlimite.idCategorie = categorie.id', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -43,7 +43,7 @@ router.get('/', function(req, res, next) {
 
 //get specific limit
 router.get('/:climit_id', function(req, res, next) {
-	connection.query('SELECT * from catlimite WHERE id = ' + req.params.climit_id, function (error, results, fields) {
+	connection.query('SELECT catlimite.*, categorie.nom FROM catlimite, categorie WHERE catlimite.id = ' + req.params.climit_id +' AND catlimite.idCategorie = categorie.id', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
