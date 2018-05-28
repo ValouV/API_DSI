@@ -103,6 +103,17 @@ router.post('/', function(req, res, next) {
   	});
 });
 
-//TODO créer route de retour de stock
+
+router.patch('/depart/:hstocks_id', function(req, res, next) {
+  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.isStock=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
+      if(error){
+        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+        //If there is error, we send the error in the error section with 500 status
+      } else {
+        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+        //If there is no error, all is good and response is 200OK.
+      }
+    });
+});
 
 module.exports = router;
