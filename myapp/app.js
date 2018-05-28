@@ -15,6 +15,7 @@ var hPretsRouter = require('./routes/hPrets');
 var hStocksRouter = require('./routes/hStocks');
 var cLimitRouter = require('./routes/cLimit');
 var catRouter = require('./routes/cat');
+var alertesRouter = require('./routes/alertes');
 
 var app = express();
 
@@ -36,16 +37,16 @@ app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
 
 		//server connection ne pas toucher
-		/*host     : 'localhost',
+		host     : 'localhost',
 		user     : 'root',
 		password : '',
-		database : 'inventaire',*/
+		database : 'inventaire',
 
 		//louis
-    port     : '3306',
+    /*port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1',
+		database : 'bddv1',*/
 
 		//val
 		/*port     : '8889',
@@ -72,6 +73,7 @@ app.use('/hPrets', hPretsRouter);
 app.use('/hStocks', hStocksRouter);
 app.use('/cLimit', cLimitRouter);
 app.use('/cat', catRouter);
+app.use('/alertes', alertesRouter);
 
 
 // catch 404 and forward to error handler
