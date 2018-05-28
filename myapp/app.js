@@ -16,6 +16,7 @@ var hStocksRouter = require('./routes/hStocks');
 var cLimitRouter = require('./routes/cLimit');
 var catRouter = require('./routes/cat');
 var alertesRouter = require('./routes/alertes');
+var helisaRouter = require('./routes/helisa');
 
 var app = express();
 
@@ -74,6 +75,7 @@ app.use('/hStocks', hStocksRouter);
 app.use('/cLimit', cLimitRouter);
 app.use('/cat', catRouter);
 app.use('/alertes', alertesRouter);
+app.use('/helisa', helisaRouter);
 
 
 // catch 404 and forward to error handler
