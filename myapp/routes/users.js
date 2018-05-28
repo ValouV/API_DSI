@@ -130,7 +130,7 @@ router.get('/:user_id', function(req, res, next) {
 //modify user
 router.patch('/:user_id', function(req, res, next) {
 	if (req.body.email !== undefined && req.body.nom !== undefined && req.body.prenom !== undefined && req.body.password !== undefined && req.body.role !== undefined && req.body.siteEPF !== undefined){
-		connection.query('UPDATE user SET email = ' + req.body.email + ', nom = ' + req.body.nom + ', prenom = "' + req.body.prenom +'", password = ' + req.body.password + ', role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
+		connection.query('UPDATE user SET email = "' + req.body.email + '", nom = "' + req.body.nom + '", prenom = "' + req.body.prenom +'", password = "' + req.body.password + '", role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
 			if(error){
 				res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 				//If there is error, we send the error in the error section with 500 status
