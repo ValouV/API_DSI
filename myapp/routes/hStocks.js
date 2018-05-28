@@ -44,9 +44,8 @@ router.get('/', function(req, res, next) {
 });
 
 //get specific hprets
-//TODO récupérer les limites, objets, catégorie
 router.get('/:hstocks_id', function(req, res, next) {
-	connection.query('SELECT * from historiquestock WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
+	connection.query('SELECT historiquestock.*, categorie.nom from historiquestock, categorie WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -86,26 +85,41 @@ router.delete('/:hstocks_id', function(req, res, next) {
 });
 
 //create hprets
-//TODO verify that objets n'a pas de hStock
-//TODO verify that objets isStock
-//TODO mettre la date d'aujourd'hui par défault
-//TODO mettre idUser via token
-//TODO vérifier qu'on a tous les paramètres
 router.post('/', function(req, res, next) {
-	connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet) VALUES ("' + req.body.arrivée + '","' + req.body.depart + '",' + req.body.idUserAdmin + ',' + req.body.idObjet + ')', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  if (req.body.idObjet !== undefined){
+    connection.query('SELECT isStock FROM objet WHERE objet.actif = 1 AND id = ' + req.body.idObjet, function (error, objet, fields) {
+      if (!objet.length){
+        res.send(JSON.stringify({"status": 500, "error": "Object not found", "response": null}));
+      } else if (objet[0].isStock == 0){
+        res.send(JSON.stringify({"status": 500, "error": "Object is not Stock", "response": null}));
+      } else {
+        var idUser = jwt.decode(req.token).iduser;
+        var arrival = new Date().toISOString().slice(0, 19).replace("T", " ");
+        connection.query('SELECT * FROM historiquestock WHERE depart = "0000-00-00 00:00:00" AND idObjet =' + req.body.idObjet, function (error, historique, fields) {
+          if (historique.length){
+            res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
+          } else {
+            connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet) VALUES ("' + arrival + '","' + '0000-00-00 00:00:00' + '",' + idUser + ',' + req.body.idObjet + ')', function (error, results, fields) {
+              if(error){
+                res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+                //If there is error, we send the error in the error section with 500 status
+              } else {
+                res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+                //If there is no error, all is good and response is 200OK.
+              }
+            });
+          }
+        });
+      }
+    });
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": "Please provide all parameters", "response": null}));
+  }
 });
 
-//todo test si objet actif 1 avant 
+//TODO test si objet actif 1 avant
 router.patch('/depart/:hstocks_id', function(req, res, next) {
-  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
+  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiqueobjet.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
         //If there is error, we send the error in the error section with 500 status
