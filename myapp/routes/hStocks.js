@@ -45,7 +45,7 @@ router.get('/', function(req, res, next) {
 
 //get specific hprets
 router.get('/:hstocks_id', function(req, res, next) {
-	connection.query('SELECT historiquestock.*, categorie.nom from historiquestock, categorie WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
+	connection.query('SELECT historiquestock.*, categorie.nom, objet.* from historiquestock, categorie, objet WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -117,7 +117,7 @@ router.post('/', function(req, res, next) {
   }
 });
 
-//TODO vérifier les niveaux de stock
+//TODO vérifier les niveaux de stock et créer alerte
 router.patch('/depart/:hstocks_id', function(req, res, next) {
   connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiqueobjet.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
       if(error){
