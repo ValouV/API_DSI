@@ -103,9 +103,9 @@ router.post('/', function(req, res, next) {
   	});
 });
 
-
+//todo test si objet actif 1 avant 
 router.patch('/depart/:hstocks_id', function(req, res, next) {
-  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.isStock=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
+  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
         //If there is error, we send the error in the error section with 500 status

@@ -102,6 +102,17 @@ router.post('/', function(req, res, next) {
   	});
 });
 
-//TODO créer route de retour de pret
+//TODO test si objet actif si objet isstock 0 avant la manip
+router.patch('/retour/:hprets_id', function(req, res, next) {
+  connection.query('UPDATE historiquepret, objet SET historiquepret.retourEffectif ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.isStock=1 WHERE historiquepret.idObjet=objet.id AND historiquepret.id=' + req.params.hprets_id, function (error, results, fields) {
+      if(error){
+        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+        //If there is error, we send the error in the error section with 500 status
+      } else {
+        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+        //If there is no error, all is good and response is 200OK.
+      }
+    });
+});
 
 module.exports = router;
