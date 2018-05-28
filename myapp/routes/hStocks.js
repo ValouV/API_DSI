@@ -117,7 +117,7 @@ router.post('/', function(req, res, next) {
   }
 });
 
-//TODO test si objet actif 1 avant
+//TODO vérifier les niveaux de stock
 router.patch('/depart/:hstocks_id', function(req, res, next) {
   connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiqueobjet.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
       if(error){
