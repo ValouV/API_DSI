@@ -43,9 +43,8 @@ router.get('/', function(req, res, next) {
 });
 
 //get specific hprets
-//TODO retourner les informations de catégorie, d'objet et de user
 router.get('/:hprets_id', function(req, res, next) {
-	connection.query('SELECT * from historiquepret WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
+	connection.query('SELECT historiquepret.*, categorie.nom, uHelisa.APPRENANT_PRENOM AS "Prénom Emprunteur", uHelisa.APPRENANT_NOM AS "Nom Emprunteur" from historiquepret, uHelisa, categorie, objet WHERE historiquepret.id = ' + req.params.hprets_id + ' AND historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
