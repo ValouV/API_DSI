@@ -128,9 +128,9 @@ router.post('/', function(req, res, next) {
   }
 });
 
-//TODO test si objet actif si objet isstock 0 avant la manip
+//retour de pret
 router.patch('/retour/:hprets_id', function(req, res, next) {
-  connection.query('UPDATE historiquepret, objet SET historiquepret.retourEffectif ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.isStock=1 WHERE historiquepret.idObjet=objet.id AND historiquepret.id=' + req.params.hprets_id, function (error, results, fields) {
+  connection.query('UPDATE historiquepret SET retourEffectif ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '" WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
         //If there is error, we send the error in the error section with 500 status
