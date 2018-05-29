@@ -84,21 +84,48 @@ router.delete('/:hprets_id', function(req, res, next) {
 });
 
 //create hprets
-//TODO verify that objets has no hprets
-//TODO verify that objets !isStock
-//TODO mettre la date d'aujourd'hui par défault
-//TODO mettre idUser nous même
-//TODO vérifier qu'on a tous les paramètres
 router.post('/', function(req, res, next) {
-	connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa) VALUES ("' + req.body.depart + '","' + req.body.retourPrevu + '","' + req.body.retourEffectif +'",' + req.body.idUserAdmin + ',' + req.body.idObjet + ',' + req.body.idUserHelisa +')', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  if (req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined && req.body.retourPrevu !== undefined){
+    var date1 = req.body.retourPrevu;
+    var date2 = new Date().toISOString().slice(0, 19).replace("T", " ");
+    var date1_ms = new Date(date1.replace(/-/g,'/'));
+    var date2_ms = new Date(date2.replace(/-/g,'/'));
+    if(date1_ms>date2_ms){
+    connection.query('SELECT isStock FROM objet WHERE objet.actif = 1 AND objet.id = ' + req.body.idObjet, function (error, objet, fields) {
+      if(!objet.length || (objet[0].isStock == 1)){
+        res.send(JSON.stringify({"status": 500, "error": "Unknown loan object", "response": null}));
+      } else {
+        connection.query('SELECT id FROM historiquepret WHERE retourEffectif = "0000-00-00 00:00:00" AND idObjet = ' + req.body.idObjet, function (error, pret, fields) {
+          if(pret.length){
+            res.send(JSON.stringify({"status": 500, "error": "Object already in loan", "response": null}));
+          } else {
+            connection.query('SELECT APPRENANT_NOM FROM uHelisa WHERE ID_ETUDIANT = "' + req.body.idUserHelisa + '"', function (error, eleve, fields) {
+              if(!eleve.length){
+                  res.send(JSON.stringify({"status": 500, "error": "Unknown student", "response": null}));
+              } else {
+            var idUser = jwt.decode(req.token).iduser;
+            var depart = new Date().toISOString().slice(0, 19).replace("T", " ");
+            connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa) VALUES ("' + depart + '","' + req.body.retourPrevu + '","0000-00-00 00:00:00",' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'")', function (error, results, fields) {
+              if(error){
+                res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+                //If there is error, we send the error in the error section with 500 status
+              } else {
+                res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+                //If there is no error, all is good and response is 200OK.
+              }
+            });
+          }
+          });
+          }
+        });
+      }
+    });
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": "Please provide a date in the future", "response": null}));
+  }
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": "Please provide all parameters", "response": null}));
+  }
 });
 
 //TODO test si objet actif si objet isstock 0 avant la manip
