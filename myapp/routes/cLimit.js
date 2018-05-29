@@ -54,9 +54,9 @@ router.get('/:climit_id', function(req, res, next) {
   	});
 });
 
-//TODO vérifier qu'on a tous les paramètres
 //CETTE ROUTE EST DEGUEU ET C'EST LA FAUTE DE LAURENE
 router.patch('/updatebackoffice', function(req, res, next) {
+  if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
 	connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ' WHERE idCategorie = ' + req.body.idCategorie + ' AND siteEPF = ' + req.body.siteEPF , function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -66,11 +66,14 @@ router.patch('/updatebackoffice', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
+  }
 });
 
 //modify limit
-//TODO vérifier qu'on a tous les paramètres
 router.patch('/:climit_id', function(req, res, next) {
+  if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
 	connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ', idCategorie = ' + req.body.idCategorie + ', siteEPF = ' + req.body.siteEPF +' WHERE id = ' + req.params.climit_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -80,6 +83,9 @@ router.patch('/:climit_id', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
+  }
 });
 
 //delete limit
@@ -96,9 +102,12 @@ router.delete('/:climit_id', function(req, res, next) {
 });
 
 //create limit
-//TODO vérifier que la limite n'est pas déjà entrée
-//TODO vérifier qu'on a tous les paramètres
 router.post('/', function(req, res, next) {
+    if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
+connection.query('SELECT id from catlimite WHERE siteEPF = ' + req.body.siteEPF + 'idCategorie = ' + req.body.idCategorie, function (error, results, fields) {
+  if (results.length){
+    res.send(JSON.stringify({"status": 500, "error": "Limit already exists", "response": null}));
+  } else {
 	connection.query('INSERT INTO catlimite (limite, idCategorie, siteEPF) VALUES (' + req.body.limite + ',' + req.body.idCategorie + ',' + req.body.siteEPF + ')', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -108,6 +117,11 @@ router.post('/', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
+  }
+  });
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
+  }
 });
 
 module.exports = router;
