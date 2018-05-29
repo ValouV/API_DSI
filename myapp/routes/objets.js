@@ -56,7 +56,6 @@ router.get('/all', function(req, res, next) {
 });
 
 //get specific object
-//TODO ajouter son historique
 router.get('/:objet_id', function(req, res, next) {
   connection.query('SELECT objet.*, categorie.nom AS "Categorie Nom", user.nom AS "User Nom", user.prenom AS "User Prenom" FROM objet, categorie, user WHERE objet.id = ' + req.params.objet_id + ' AND objet.idCategorie = categorie.id AND objet.idUser = user.id', function (error, results, fields) {
     if(error){
@@ -70,9 +69,8 @@ router.get('/:objet_id', function(req, res, next) {
   });
 });
 
-//TODO ajouter nom user Helisa in Pret
 router.get('/:objet_id/historique', function(req, res, next) {
-  connection.query('SELECT * from historiquepret WHERE historiquepret.idObjet = ' + req.params.objet_id, function (error, historiquepret, fields) {
+  connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM AS "Nom emprunteur", uHelisa.APPRENANT_PRENOM AS "Prénom Empruteur" from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = ' + req.params.objet_id, function (error, historiquepret, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
@@ -159,7 +157,6 @@ router.post('/', function(req, res, next) {
     }
   });
 });
-
 
 router.get('/state/:objet_id', function(req, res, next){
   connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, monObjet, fields) {
