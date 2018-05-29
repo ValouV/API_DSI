@@ -61,12 +61,10 @@ app.use(function(req, res, next){
 	next();
 });
 
-
-//TODO route Hélisa
+//TODO gérer le temps
 //TODO mail alertes
 //TODO routes admin
 //TODO notifications
-//TODO problèmes de dates
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
