@@ -180,7 +180,7 @@ router.get('/state/:objet_id', function(req, res, next){
               if (objet.isStock == 1) {
                 res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie }}));
               } else {
-                connection.query('SELECT * from historiquepret WHERE idObjet = ' + req.params.objet_id + ' AND retourEffectif = "0000-00-00 00:00:00"', function(error2, monPret, fields2){
+                connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND idObjet = ' + req.params.objet_id + ' AND retourEffectif = "0000-00-00 00:00:00"', function(error2, monPret, fields2){
                   if(error){
                     res.send(JSON.stringify({"status": 500, "error": error2, "response": null}));
                     //If there is error, we send the error in the error section with 500 status
