@@ -128,6 +128,7 @@ router.delete('/:objet_id', function(req, res, next) {
 
 //create object
 //TODO vérfier avec l'équipe Application que c'est peut être eux qui nous donnent l'id. Si oui vérifier id et créer route prochain id
+//TODO vérifier que la catégorie existe
 router.post('/', function(req, res, next) {
   connection.query('SELECT siteEPF from user WHERE id = ' + jwt.decode(req.token).iduser, function (error, site, fields2) {
     if(error){
