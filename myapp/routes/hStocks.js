@@ -45,7 +45,7 @@ router.get('/', function(req, res, next) {
 
 //get specific hprets
 router.get('/:hstocks_id', function(req, res, next) {
-	connection.query('SELECT historiquestock.*, categorie.nom, objet.* from historiquestock, categorie, objet WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
+	connection.query('SELECT historiquestock.*, categorie.nom AS "Nom Categorie" from historiquestock, categorie, objet WHERE historiquestock.id = ' + req.params.hstocks_id + ' AND historiquestock.idObjet = objet.id AND objet.idCategorie = categorie.id', function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -57,7 +57,7 @@ router.get('/:hstocks_id', function(req, res, next) {
 });
 
 //modify hprets
-//TODO supprimer cette route
+//TODO supprimer cette route ?
 router.patch('/:hstocks_id', function(req, res, next) {
 	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
