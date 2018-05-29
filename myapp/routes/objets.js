@@ -56,6 +56,7 @@ router.get('/all', function(req, res, next) {
 });
 
 //get specific object
+//TODO ajouter son historique
 router.get('/:objet_id', function(req, res, next) {
   connection.query('SELECT objet.*, categorie.nom AS "Categorie Nom", user.nom AS "User Nom", user.prenom AS "User Prenom" FROM objet, categorie, user WHERE objet.id = ' + req.params.objet_id + ' AND objet.idCategorie = categorie.id AND objet.idUser = user.id', function (error, results, fields) {
     if(error){
