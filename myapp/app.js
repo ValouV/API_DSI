@@ -44,10 +44,11 @@ app.use(function(req, res, next){
 		database : 'inventaire',
 
 		//louis
-    /*port     : '3306',
+/*
+    	port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1',*/
+		database : 'bddclean',
 
 		//val
 		/*port     : '8889',

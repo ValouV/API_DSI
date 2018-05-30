@@ -42,7 +42,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-//TODO REPARER
+
 router.get('/stocks', function(req, res, next) {
   connection.query('SELECT id, nom from categorie', function (error, results, fields) {
     if(error){
@@ -59,7 +59,7 @@ router.get('/stocks', function(req, res, next) {
         //console.log(req.categorie[i]["nom"]);
         req.materielsobjet[i]={"id":req.categorie[i]["id"], "materiel_stock":req.categorie[i]["nom"]};
         // req.materielsobjet.push({"materiel_stock":i+1});
-        connection.query("SELECT * from objet WHERE idCategorie='" + i + "' and siteEPF=1 and actif=1", function (error, results, fields) {
+        connection.query("SELECT * from objet WHERE idCategorie='" + i + "'+1 and siteEPF=1 and actif=1", function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
             //If there is error, we send the error in the error section with 500 status
@@ -77,7 +77,7 @@ router.get('/stocks', function(req, res, next) {
         });
 
 
-        connection.query('SELECT * from objet WHERE idCategorie="' + i + '" and siteEPF=2 and actif=1', function (error, results, fields) {
+        connection.query('SELECT * from objet WHERE idCategorie="' + i + '"+1 and siteEPF=2 and actif=1', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
             //If there is error, we send the error in the error section with 500 status
@@ -90,7 +90,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
-        connection.query('SELECT * from objet WHERE idCategorie="' + i + '" and siteEPF=3 and actif=1', function (error, results, fields) {
+        connection.query('SELECT * from objet WHERE idCategorie="' + i + '"+1 and siteEPF=3 and actif=1', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
             //If there is error, we send the error in the error section with 500 status
@@ -103,7 +103,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
-        connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '" and siteEPF=1', function (error, results, fields) {
+        connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '"+1 and siteEPF=1', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
             //If there is error, we send the error in the error section with 500 status
@@ -119,7 +119,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
-        connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '" and siteEPF=2', function (error, results, fields) {
+        connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '"+1 and siteEPF=2', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
             //If there is error, we send the error in the error section with 500 status
@@ -135,7 +135,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
-        connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '" and siteEPF=3', function (error, results, fields) {
+        connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '"+1 and siteEPF=3', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
             //If there is error, we send the error in the error section with 500 status
