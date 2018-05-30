@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
+var moment = require('moment');
 
 
 router.use(function(req, res, next) {
@@ -87,7 +88,7 @@ router.delete('/:hprets_id', function(req, res, next) {
 router.post('/', function(req, res, next) {
   if (req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined && req.body.retourPrevu !== undefined){
     var date1 = req.body.retourPrevu;
-    var date2 = new Date().toISOString().slice(0, 19).replace("T", " ");
+    var date2 = moment().format();
     var date1_ms = new Date(date1.replace(/-/g,'/'));
     var date2_ms = new Date(date2.replace(/-/g,'/'));
     if(date1_ms>date2_ms){
@@ -104,7 +105,7 @@ router.post('/', function(req, res, next) {
                   res.send(JSON.stringify({"status": 500, "error": "Unknown student", "response": null}));
               } else {
             var idUser = jwt.decode(req.token).iduser;
-            var depart = new Date().toISOString().slice(0, 19).replace("T", " ");
+            var depart = moment().format();
             connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa) VALUES ("' + depart + '","' + req.body.retourPrevu + '","0000-00-00 00:00:00",' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'")', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -130,7 +131,7 @@ router.post('/', function(req, res, next) {
 
 //retour de pret
 router.patch('/retour/:hprets_id', function(req, res, next) {
-  connection.query('UPDATE historiquepret SET retourEffectif ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '" WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
+  connection.query('UPDATE historiquepret SET retourEffectif ="' + moment().format() + '" WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
         //If there is error, we send the error in the error section with 500 status

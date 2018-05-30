@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
+var moment = require('moment');
 
 router.use(function(req, res, next) {
   // check header or url parameters or post parameters for token
@@ -93,7 +94,7 @@ router.post('/', function(req, res, next) {
         res.send(JSON.stringify({"status": 500, "error": "Object is not Stock", "response": null}));
       } else {
         var idUser = jwt.decode(req.token).iduser;
-        var arrival = new Date().toISOString().slice(0, 19).replace("T", " ");
+        var arrival = moment().format();
         connection.query('SELECT * FROM historiquestock WHERE depart = "0000-00-00 00:00:00" AND idObjet =' + req.body.idObjet, function (error, historique, fields) {
           if (historique.length){
             res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
@@ -117,7 +118,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.patch('/depart/:hstocks_id', function(req, res, next) {
-  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
+  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + moment().format() + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
       console.log(results.affectedRows);
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -151,7 +152,7 @@ function alerteStock(results){
               var message = "Vous avez atteint la limite pour l'objet de type " + results[0].nom + " sur le site de " + nomSiteEPF(siteEPF) + ". Il vous reste " + count + " objets.";
               connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
                 mail(results, "Alerte Stock", message);
-                connection.query('INSERT INTO alerteStock(date, message, lu, type, idHistoriqueStock) VALUES ("'+ new Date().toISOString().slice(0, 19).replace("T", " ") +'","' + message + '",0,0,' + idStock +')', function (error, results, fields) {
+                connection.query('INSERT INTO alerteStock(date, message, lu, type, idHistoriqueStock) VALUES ("'+ moment().format() +'","' + message + '",0,0,' + idStock +')', function (error, results, fields) {
                 });
                 return message;
               });
