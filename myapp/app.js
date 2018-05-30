@@ -49,10 +49,10 @@ app.use(function(req, res, next){
     	port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddclean',
+		database : 'bddclean',*/
 
 		//val
-		port     : '8889',
+		/*port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI',*/
@@ -63,7 +63,6 @@ app.use(function(req, res, next){
 	next();
 });
 
-//TODO gérer le temps
 //TODO cron prets
 /*
 var cron = require('node-cron');
@@ -103,5 +102,88 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+var cron = require('node-cron');
+cron.schedule('0 0 * * *', function(){
+	var moment = require('moment');
+	moment.locale('fr');
+	var nodemailer = require('nodemailer');
+	global.connection = mysql.createConnection({
+
+		//server connection ne pas toucher
+		host     : 'localhost',
+		user     : 'root',
+		password : '',
+		database : 'inventaire',
+
+		//louis
+		/*
+		port     : '3306',
+		user     : 'root',
+		password : '',
+		database : 'bddclean',*/
+
+		//val
+		/*port     : '8889',
+		user     : 'root',
+		password : 'root',
+		database : 'Inventaire_DSI',*/
+		multipleStatements: true
+
+	});
+	connection.connect();
+	connection.query('SELECT historiquepret.*, objet.*, categorie.*, uHelisa.* FROM historiquepret, objet, categorie, uHelisa WHERE historiquepret.retourEffectif = "0000-00-00 00:00:00" AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.idUserHelisa = ID_ETUDIANT', function (error, results, fields) {
+		var transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				user: 'epf.stock.dsi@gmail.com',
+				pass: '1EPFadmin'
+			}
+		});
+		var message = "";
+		for (var i = 0; i < results.length; i++) {
+			if(results[i].retourPrevu > moment().format()){
+			message = message + "L'objet " + results[i].idObjet + " de type " + results[i].nom + " loué (pas les poulets) par " + results[i].APPRENANT_NOM + " " + results[i].APPRENANT_PRENOM + " (" + results[i].EMAIL + ") est en retard. Il aurait dû revenir le " + moment(results[i].retourPrevu).format('l') + ".</br>";
+			var mailOptions = {
+				from: 'epf.stock.dsi@gmail.com', // sender address
+				to: results[i].EMAIL, // list of receivers
+				subject: "RETARD SUR PRET",
+				html: "Vous avez loué (pas les poulets) un objet de type" + results[i].nom + ". Vous auriez du le retourner en date du " + moment(results[i].retourPrevu).format('l') + " . Veuillez le retourner au plus vite avant que je sois dans l'obligation de manger vos énormes morts."
+			};
+			transporter.sendMail(mailOptions, function (err, info) {
+				if(err)
+				console.log(err)
+				else
+				console.log(info);
+			});
+		}
+		}
+		if(message != null){
+		connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
+			results.forEach(function (to, i , array) {
+				const mailOptions = {
+					from: 'epf.stock.dsi@gmail.com', // sender address
+					to: to.email, // list of receivers
+					subject: "UPDATE RETARDS HEBDOMADAIRE",
+					html: message
+				};
+				transporter.sendMail(mailOptions, function (err, info) {
+					if(err)
+					console.log(err)
+					else
+					console.log(info);
+				});
+			});
+		});
+	}
+	});
+});
+
+
+
+
+
+
+
 
 module.exports = app;
