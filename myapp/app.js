@@ -64,7 +64,6 @@ app.use(function(req, res, next){
 	next();
 });
 
-//TODO protections routes
 //TODO notifications
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
