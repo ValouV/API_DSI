@@ -41,6 +41,8 @@ router.get('/', function(req, res, next) {
   	});
 });
 
+
+//TODO REPARER
 router.get('/stocks', function(req, res, next) {
   connection.query('SELECT id, nom from categorie', function (error, results, fields) {
     if(error){
@@ -178,6 +180,8 @@ router.get('/stocks', function(req, res, next) {
 
 
 });
+
+//TODO faire tableau prets
 
 //get specific categorie
 //TODO envoyer les informations de nombre d'objets en stock, en flotte de pret et en pret, les limites associées
