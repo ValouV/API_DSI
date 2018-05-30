@@ -183,6 +183,18 @@ router.get('/stocks', function(req, res, next) {
 
 //TODO faire tableau prets
 
+router.get('/prets', function(req, res, next) {
+  connection.query('SELECT historiquepret.*, categorie.nom, uHelisa.EMAIL, uHELISA.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, objet, categorie, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.retourEffectif = "0000-00-00 00:00:00"', function (error, prets, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": prets}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
+});
+
 //get specific categorie
 //TODO envoyer les informations de nombre d'objets en stock, en flotte de pret et en pret, les limites associées
 router.get('/:cat_id', function(req, res, next) {
