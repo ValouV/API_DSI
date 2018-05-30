@@ -56,7 +56,7 @@ router.get('/:hstocks_id', function(req, res, next) {
 });
 
 //modify hprets
-//TODO supprimer cette route ?
+//TODO supprimer cette route ou vérifier qu'on a les paramètres
 router.patch('/:hstocks_id', function(req, res, next) {
 	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
