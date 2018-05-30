@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 var crypto = require('crypto')
-//TODO hash password
 
 //get specific user
 router.post('/connexion', function(req, res, next) {
