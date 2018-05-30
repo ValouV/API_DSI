@@ -63,17 +63,6 @@ app.use(function(req, res, next){
 	next();
 });
 
-//TODO cron prets
-/*
-var cron = require('node-cron');
-cron.schedule('* * * * *', function(){
-  console.log('running a task every minute');
-});
-//TODO Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (soir même)
-//TODO Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (tous les lundis matin)
-https://nodemailer.com/about/
-pour les mails
-*/
 //TODO routes admin
 //TODO notifications
 app.use('/', indexRouter);
@@ -164,7 +153,7 @@ cron.schedule('0 0 * * *', function(){
 				const mailOptions = {
 					from: 'epf.stock.dsi@gmail.com', // sender address
 					to: to.email, // list of receivers
-					subject: "UPDATE RETARDS HEBDOMADAIRE",
+					subject: "UPDATE RETARDS",
 					html: message
 				};
 				transporter.sendMail(mailOptions, function (err, info) {
