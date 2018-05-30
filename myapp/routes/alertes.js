@@ -9,16 +9,16 @@ router.use(function(req, res, next) {
   // decode token
   if (token) {
     // verifies secret and checks exp
-    jwt.verify(token, 'shit', function(err, decoded) {
-      if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });
-      } else {
-        // if everything is good, save to request for use in other routes
-        req.decoded = decoded;
-        req.token = token;
-        next();
-      }
-    });
+    connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
+			if ([1,2].indexOf(results[0].role) !== -1 ){
+				next();
+			} else {
+				return res.status(403).send({
+		        success: false,
+		        message: 'You should be admin to see this.'
+		    });
+			}
+		});
   } else {
     // if there is no token
     // return an error

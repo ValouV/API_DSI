@@ -18,6 +18,7 @@ var cLimitRouter = require('./routes/cLimit');
 var catRouter = require('./routes/cat');
 var alertesRouter = require('./routes/alertes');
 var helisaRouter = require('./routes/helisa');
+var externRouter = require('./routes/extern');
 
 var app = express();
 
@@ -63,7 +64,7 @@ app.use(function(req, res, next){
 	next();
 });
 
-//TODO routes admin
+//TODO protections routes
 //TODO notifications
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -74,6 +75,7 @@ app.use('/cLimit', cLimitRouter);
 app.use('/cat', catRouter);
 app.use('/alertes', alertesRouter);
 app.use('/helisa', helisaRouter);
+app.use('/extern', externRouter);
 
 
 // catch 404 and forward to error handler
@@ -167,12 +169,5 @@ cron.schedule('0 0 * * *', function(){
 	}
 	});
 });
-
-
-
-
-
-
-
 
 module.exports = app;
