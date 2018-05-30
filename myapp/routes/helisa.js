@@ -55,7 +55,7 @@ router.get('/photo/:id_user', function(req, res, next){
 		});
 });
 
-router.get('/mail/:email'), function(req, res, next){
+router.get('/mail/:email', function(req, res, next){
 	connection.query('SELECT * FROM uHelisa WHERE EMAIL = "' + req.params.email + '"', function (error, results, fields) {
 			if(error){
 				res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
