@@ -7,6 +7,7 @@ var mysql = require("mysql");
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
+var cron = require('node-cron');
 
 
 var indexRouter = require('./routes/index');
@@ -65,7 +66,7 @@ app.use(function(req, res, next){
 });
 
 //TODO notifications
-//TODO vérifier la sécurité
+//TODO vérifier la sécurité au minimum de la route de connection
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
@@ -94,7 +95,6 @@ app.use(function(err, req, res, next) {
 	res.render('error');
 });
 
-var cron = require('node-cron');
 cron.schedule('0 0 * * *', function(){
 	var moment = require('moment');
 	moment.locale('fr');
