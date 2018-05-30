@@ -74,8 +74,7 @@ router.patch('/:hprets_id', function(req, res, next) {
 });
 
 //delete hprets
-//TODO supprimer cette route ?
-router.delete('/:hprets_id', function(req, res, next) {
+/*router.delete('/:hprets_id', function(req, res, next) {
 	connection.query('DELETE FROM historiquepret WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -85,7 +84,7 @@ router.delete('/:hprets_id', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
-});
+});*/
 
 //create hprets
 router.post('/', function(req, res, next) {

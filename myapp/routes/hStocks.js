@@ -72,7 +72,7 @@ router.patch('/:hstocks_id', function(req, res, next) {
 });
 
 //delete hprets
-//TODO supprimer cette route ?
+/*
 router.delete('/:hstocks_id', function(req, res, next) {
 	connection.query('DELETE FROM historiquestock WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
@@ -83,7 +83,7 @@ router.delete('/:hstocks_id', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
-});
+});*/
 
 //create hprets
 router.post('/', function(req, res, next) {
