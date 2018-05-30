@@ -63,6 +63,16 @@ app.use(function(req, res, next){
 
 //TODO gérer le temps
 //TODO mail alertes
+/*
+var cron = require('node-cron');
+cron.schedule('* * * * *', function(){
+  console.log('running a task every minute');
+});
+//Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (soir même)
+//Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (tous les lundis matin)
+https://nodemailer.com/about/
+pour les mails
+*/
 //TODO routes admin
 //TODO notifications
 app.use('/', indexRouter);

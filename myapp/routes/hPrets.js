@@ -56,7 +56,7 @@ router.get('/:hprets_id', function(req, res, next) {
 });
 
 //modify hprets
-//TODO supprimer cette route ?
+//TODO supprimer cette route ou vérifier qu'on a les paramètres
 router.patch('/:hprets_id', function(req, res, next) {
 	connection.query('UPDATE historiquepret SET depart = "' + req.body.depart + '", retourPrevu = "' + req.body.retourPrevu + '", retourEffectif = "' + req.body.retourEffectif +'", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ', idUserHelisa = ' + req.body.idUserHelisa + ' WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){

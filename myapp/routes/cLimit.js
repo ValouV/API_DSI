@@ -103,22 +103,22 @@ router.delete('/:climit_id', function(req, res, next) {
 
 //create limit
 router.post('/', function(req, res, next) {
-    if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
-connection.query('SELECT id from catlimite WHERE siteEPF = ' + req.body.siteEPF + 'idCategorie = ' + req.body.idCategorie, function (error, results, fields) {
-  if (results.length){
-    res.send(JSON.stringify({"status": 500, "error": "Limit already exists", "response": null}));
-  } else {
-	connection.query('INSERT INTO catlimite (limite, idCategorie, siteEPF) VALUES (' + req.body.limite + ',' + req.body.idCategorie + ',' + req.body.siteEPF + ')', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
-  }
-  });
+  if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
+    connection.query('SELECT id from catlimite WHERE siteEPF = ' + req.body.siteEPF + 'idCategorie = ' + req.body.idCategorie, function (error, results, fields) {
+      if (results.length){
+        res.send(JSON.stringify({"status": 500, "error": "Limit already exists", "response": null}));
+      } else {
+        connection.query('INSERT INTO catlimite (limite, idCategorie, siteEPF) VALUES (' + req.body.limite + ',' + req.body.idCategorie + ',' + req.body.siteEPF + ')', function (error, results, fields) {
+          if(error){
+            res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+          } else {
+            res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+            //If there is no error, all is good and response is 200OK.
+          }
+        });
+      }
+    });
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
   }
