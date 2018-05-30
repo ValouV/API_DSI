@@ -181,8 +181,6 @@ router.get('/stocks', function(req, res, next) {
 
 });
 
-//TODO faire tableau prets
-
 router.get('/prets', function(req, res, next) {
   connection.query('SELECT historiquepret.*, categorie.nom, uHelisa.EMAIL, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, objet, categorie, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.retourEffectif = "0000-00-00 00:00:00"', function (error, prets, fields) {
     if(error){
@@ -196,8 +194,8 @@ router.get('/prets', function(req, res, next) {
 });
 
 //get specific categorie
-//TODO envoyer les informations de nombre d'objets en stock, en flotte de pret et en pret, les limites associées
 router.get('/:cat_id', function(req, res, next) {
+
 	connection.query('SELECT categorie.* from categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -207,6 +205,7 @@ router.get('/:cat_id', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
+
 });
 
 //modify categorie
