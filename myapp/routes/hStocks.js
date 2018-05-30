@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
-
-
+var nodemailer = require('nodemailer');
 
 router.use(function(req, res, next) {
   // check header or url parameters or post parameters for token
@@ -117,17 +116,90 @@ router.post('/', function(req, res, next) {
   }
 });
 
-//TODO vérifier les niveaux de stock et créer alerte
 router.patch('/depart/:hstocks_id', function(req, res, next) {
-  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiqueobjet.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
+  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + new Date().toISOString().slice(0, 19).replace("T", " ") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
+      console.log(results.affectedRows);
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
         //If there is error, we send the error in the error section with 500 status
+      } else if (results.affectedRows != 2){
+        res.send(JSON.stringify({"status": 500, "error": "Impossible to close this stock", "response": null}));
       } else {
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+        var message = alerteStock(req.params.hstocks_id);
+        res.send(JSON.stringify({"status": 200, "error": message, "response": results}));
         //If there is no error, all is good and response is 200OK.
       }
     });
 });
 
 module.exports = router;
+
+function alerteStock(results){
+  var idStock = results;
+  connection.query('SELECT * from historiquestock WHERE id = ' + results, function (error, results, fields) {
+    var idObjet = results[0].idObjet;
+    connection.query('SELECT objet.idCategorie, objet.siteEPF FROM objet WHERE objet.id = ' + idObjet, function (error, results, fields) {
+      var idCategorie = results[0].idCategorie;
+      var siteEPF = results[0].siteEPF;
+      console.log(idStock, idObjet, idCategorie, siteEPF);
+      connection.query('SELECT id from objet WHERE objet.idCategorie = ' + idCategorie + ' AND objet.siteEPF = ' + siteEPF + ' AND objet.actif = 1 AND objet.isStock = 1', function (error, results, fields) {
+        var count = results.length;
+        connection.query('SELECT limite from catlimite WHERE catlimite.idCategorie = ' + idCategorie + ' AND catlimite.siteEPF = ' + siteEPF, function (error, results, fields) {
+          var limite = results[0].limite;
+          if (limite >= count){
+            connection.query('SELECT nom from categorie WHERE id = ' + idCategorie, function (error, results, fields) {
+              var message = "Vous avez atteint la limite pour l'objet de type " + results[0].nom + " sur le site de " + nomSiteEPF(siteEPF) + ". Il vous reste " + count + " objets.";
+              connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
+                mail(results, "Alerte Stock", message);
+                connection.query('INSERT INTO alerteStock(date, message, lu, type, idHistoriqueStock) VALUES ("'+ new Date().toISOString().slice(0, 19).replace("T", " ") +'","' + message + '",0,0,' + idStock +')', function (error, results, fields) {
+                });
+                return message;
+              });
+            });
+          }
+        });
+      });
+    });
+  });
+  return null;
+}
+
+function nomSiteEPF(siteEPF){
+	switch (siteEPF){
+		case 1:
+		return "Sceaux";
+		break;
+		case 2:
+		return "Troyes";
+		break;
+		default:
+		return "Montpellier";
+	}
+}
+
+function mail(destination, subject, message){
+  console.log(destination);
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'epf.stock.dsi@gmail.com',
+      pass: '1EPFadmin'
+    }
+  });
+
+  destination.forEach(function (to, i , array) {
+    const mailOptions = {
+      from: 'epf.stock.dsi@gmail.com', // sender address
+      to: to.email, // list of receivers
+      subject: subject,
+      html: message
+    };
+
+    transporter.sendMail(mailOptions, function (err, info) {
+      if(err)
+      console.log(err)
+      else
+      console.log(info);
+    });
+  });
+}
