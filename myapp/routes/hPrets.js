@@ -57,8 +57,8 @@ router.get('/:hprets_id', function(req, res, next) {
 });
 
 //modify hprets
-//TODO supprimer cette route ou vérifier qu'on a les paramètres
 router.patch('/:hprets_id', function(req, res, next) {
+  if (req.body.depart !== undefined && req.body.retourPrevu !== undefined && req.body.retourEffectif !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined){
 	connection.query('UPDATE historiquepret SET depart = "' + req.body.depart + '", retourPrevu = "' + req.body.retourPrevu + '", retourEffectif = "' + req.body.retourEffectif +'", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ', idUserHelisa = ' + req.body.idUserHelisa + ' WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -68,6 +68,9 @@ router.patch('/:hprets_id', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
+  } else {
+    res.send(JSON.stringify({"status": 500, "error": "Please provide all parameters", "response": null}));
+  }
 });
 
 //delete hprets

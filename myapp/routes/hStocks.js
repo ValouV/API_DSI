@@ -57,9 +57,9 @@ router.get('/:hstocks_id', function(req, res, next) {
 });
 
 //modify hprets
-//TODO supprimer cette route ou vérifier qu'on a les paramètres
 router.patch('/:hstocks_id', function(req, res, next) {
-	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
+  if(req.body.depart !== undefined && req.body.arrivee !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined ){
+    	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -68,6 +68,7 @@ router.patch('/:hstocks_id', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
+  }
 });
 
 //delete hprets
