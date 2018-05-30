@@ -1,12 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
-
+var crypto = require('crypto')
 //TODO hash password
 
 //get specific user
 router.post('/connexion', function(req, res, next) {
-	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE email=? and password=?',[req.body.email,req.body.password], function (error, results, fields) {
+	//hash = crypto.createHmac('sha256', 'ahbon').update('password1').digest('hex');
+	//console.log(hash);
+	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE email=? and password=?',[req.body.email, crypto.createHmac('sha256', 'ahbon').update(req.body.password).digest('hex')], function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -17,6 +19,9 @@ router.post('/connexion', function(req, res, next) {
 			res.send(JSON.stringify({"status": 200, "error": null, "response": results, message: 'Authentication failed. User not found.' }));
 		}
 		if (results.length){
+
+
+
 				const payload = {
 					"iduser" : results[0].id,
 					 "emailuser" : results[0].email
@@ -130,7 +135,7 @@ router.get('/:user_id', function(req, res, next) {
 //modify user
 router.patch('/:user_id', function(req, res, next) {
 	if (req.body.email !== undefined && req.body.nom !== undefined && req.body.prenom !== undefined && req.body.password !== undefined && req.body.role !== undefined && req.body.siteEPF !== undefined){
-		connection.query('UPDATE user SET email = "' + req.body.email + '", nom = "' + req.body.nom + '", prenom = "' + req.body.prenom +'", password = "' + req.body.password + '", role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
+		connection.query('UPDATE user SET email = "' + req.body.email + '", nom = "' + req.body.nom + '", prenom = "' + req.body.prenom +'", password = "' + crypto.createHmac('sha256', 'ahbon').update(req.body.password).digest('hex') + '", role = ' + req.body.role + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.user_id, function (error, results, fields) {
 			if(error){
 				res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 				//If there is error, we send the error in the error section with 500 status
@@ -164,7 +169,7 @@ router.post('/', function(req, res, next) {
 			if(results.length){
 				res.send(JSON.stringify({"status": 200, "error": null, "response": "An account already exists with this email."}));
 			} else {
-				connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES ("' + req.body.email + '","' + req.body.nom + '","' + req.body.prenom +'","' + req.body.password + '",' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
+				connection.query('INSERT INTO user (email, nom, prenom, password, role, siteEPF) VALUES ("' + req.body.email + '","' + req.body.nom + '","' + req.body.prenom +'","' + crypto.createHmac('sha256', 'ahbon').update(req.body.password).digest('hex') + '",' + req.body.role + ',' + req.body.siteEPF +')', function (error, results, fields) {
 					if(error){
 						res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 						//If there is error, we send the error in the error section with 500 status
