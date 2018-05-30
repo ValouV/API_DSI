@@ -46,8 +46,8 @@ app.use(function(req, res, next){
 		database : 'inventaire',
 
 		//louis
-/*
-    	port     : '3306',
+		/*
+		port     : '3306',
 		user     : 'root',
 		password : '',
 		database : 'bddclean',*/
@@ -80,18 +80,18 @@ app.use('/extern', externRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+	next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+	// render the error page
+	res.status(err.status || 500);
+	res.render('error');
 });
 
 var cron = require('node-cron');
@@ -134,29 +134,12 @@ cron.schedule('0 0 * * *', function(){
 		var message = "";
 		for (var i = 0; i < results.length; i++) {
 			if(results[i].retourPrevu > moment().format()){
-			message = message + "L'objet " + results[i].idObjet + " de type " + results[i].nom + " loué (pas les poulets) par " + results[i].APPRENANT_NOM + " " + results[i].APPRENANT_PRENOM + " (" + results[i].EMAIL + ") est en retard. Il aurait dû revenir le " + moment(results[i].retourPrevu).format('l') + ".</br>";
-			var mailOptions = {
-				from: 'epf.stock.dsi@gmail.com', // sender address
-				to: results[i].EMAIL, // list of receivers
-				subject: "RETARD SUR PRET",
-				html: "Vous avez loué (pas les poulets) un objet de type" + results[i].nom + ". Vous auriez du le retourner en date du " + moment(results[i].retourPrevu).format('l') + " . Veuillez le retourner au plus vite avant que je sois dans l'obligation de manger vos énormes morts."
-			};
-			transporter.sendMail(mailOptions, function (err, info) {
-				if(err)
-				console.log(err)
-				else
-				console.log(info);
-			});
-		}
-		}
-		if(message != null){
-		connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
-			results.forEach(function (to, i , array) {
-				const mailOptions = {
+				message = message + "L'objet " + results[i].idObjet + " de type " + results[i].nom + " loué (pas les poulets) par " + results[i].APPRENANT_NOM + " " + results[i].APPRENANT_PRENOM + " (" + results[i].EMAIL + ") est en retard. Il aurait dû revenir le " + moment(results[i].retourPrevu).format('l') + ".</br>";
+				var mailOptions = {
 					from: 'epf.stock.dsi@gmail.com', // sender address
-					to: to.email, // list of receivers
-					subject: "UPDATE RETARDS",
-					html: message
+					to: results[i].EMAIL, // list of receivers
+					subject: "RETARD SUR PRET",
+					html: "Vous avez loué (pas les poulets) un objet de type" + results[i].nom + ". Vous auriez du le retourner en date du " + moment(results[i].retourPrevu).format('l') + " . Veuillez le retourner au plus vite avant que je sois dans l'obligation de manger vos énormes morts."
 				};
 				transporter.sendMail(mailOptions, function (err, info) {
 					if(err)
@@ -164,9 +147,26 @@ cron.schedule('0 0 * * *', function(){
 					else
 					console.log(info);
 				});
+			}
+		}
+		if(message != null){
+			connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
+				results.forEach(function (to, i , array) {
+					const mailOptions = {
+						from: 'epf.stock.dsi@gmail.com', // sender address
+						to: to.email, // list of receivers
+						subject: "UPDATE RETARDS",
+						html: message
+					};
+					transporter.sendMail(mailOptions, function (err, info) {
+						if(err)
+						console.log(err)
+						else
+						console.log(info);
+					});
+				});
 			});
-		});
-	}
+		}
 	});
 });
 

@@ -10,15 +10,15 @@ router.use(function(req, res, next) {
   if (token) {
     // verifies secret and checks exp
     connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
-			if ([1,2].indexOf(results[0].role) !== -1 ){
-				next();
-			} else {
-				return res.status(403).send({
-		        success: false,
-		        message: 'You should be admin to see this.'
-		    });
-			}
-		});
+      if ([1,2].indexOf(results[0].role) !== -1 ){
+        next();
+      } else {
+        return res.status(403).send({
+          success: false,
+          message: 'You should be admin to see this.'
+        });
+      }
+    });
   } else {
     // if there is no token
     // return an error
@@ -41,12 +41,12 @@ router.get('/', function(req, res, next) {
           res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
           //If there is error, we send the error in the error section with 500 status
         } else {
-           res.send(JSON.stringify({"status": 200, "error": null, "response": {alertesPret, alertesStock}}));
-           connection.query('UPDATE alertestock SET lu = 1; UPDATE alertepret SET lu = 1;'), function (error, results, fields) {
-             if(error){
-               console.log(error);
-             }
-           };
+          res.send(JSON.stringify({"status": 200, "error": null, "response": {alertesPret, alertesStock}}));
+          connection.query('UPDATE alertestock SET lu = 1; UPDATE alertepret SET lu = 1;'), function (error, results, fields) {
+            if(error){
+              console.log(error);
+            }
+          };
         }
       });
     }
