@@ -65,6 +65,7 @@ app.use(function(req, res, next){
 });
 
 //TODO notifications
+//TODO vérifier la sécurité
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
