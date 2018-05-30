@@ -230,10 +230,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `email`, `nom`, `prenom`, `password`, `role`, `siteEPF`) VALUES
-(1, 'admin', 'admin', 'admin', 'admin', 1, 1),
-(2, 'administrationepf', 'administrationepf', 'administrationepf', 'administrationepf', 3, 1),
-(3, 'admintroyes', 'admintroyes', 'admintroyes', 'admintroyes', 2, 2),
-(4, 'adminmtp', 'adminmtp', 'adminmtp', 'adminmtp', 2, 3);
+(1, 'admin', 'admin', 'admin', '91f5e1599852db9768a6e3a2a0cfd81436805ad55575c388ff5e99e55ee8e4e8', 1, 1),
+(2, 'administrationepf', 'administrationepf', 'administrationepf', '168e062e036b20bff83e79fc49a34783369eee429b129d770ad966629a6f888b', 3, 1),
+(3, 'admintroyes', 'admintroyes', 'admintroyes', 'e00b6c07ee21adad0c6d9db33239827d79ff1d89fb7db3a808f1b0abfdcaeb49', 2, 2),
+(4, 'adminmtp', 'adminmtp', 'adminmtp', 'e2277c6be8735e97b66bd20f33c68e91931f8fc798bf041059f5bca0d97e83dc', 2, 3);
 
 --
 -- Index pour les tables déchargées
