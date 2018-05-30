@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var objetsRouter = require('./routes/objets');
@@ -51,7 +52,7 @@ app.use(function(req, res, next){
 		database : 'bddclean',
 
 		//val
-		/*port     : '8889',
+		port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI',*/
@@ -63,14 +64,14 @@ app.use(function(req, res, next){
 });
 
 //TODO gérer le temps
-//TODO mail alertes
+//TODO cron prets
 /*
 var cron = require('node-cron');
 cron.schedule('* * * * *', function(){
   console.log('running a task every minute');
 });
-//Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (soir même)
-//Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (tous les lundis matin)
+//TODO Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (soir même)
+//TODO Faire un cron pour regarder les prêts non rendus alors qu'ils devraient l'être (tous les lundis matin)
 https://nodemailer.com/about/
 pour les mails
 */
