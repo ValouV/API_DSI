@@ -153,6 +153,12 @@ function alerteStock(results){
               var message = "Vous avez atteint la limite pour l'objet de type " + results[0].nom + " sur le site de " + nomSiteEPF(siteEPF) + ". Il vous reste " + count + " objets.";
               connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
                 mail(results, "Alerte Stock", message);
+                var messageNotif = {
+                  app_id: "9f332b69-e10b-446d-8d77-0b452f8ba64a",
+                  contents: {"fr": message},
+                  included_segments: ["All"]
+                };
+                sendNotification(messageNotif);
                 connection.query('INSERT INTO alerteStock(date, message, lu, type, idHistoriqueStock) VALUES ("'+ moment().format() +'","' + message + '",0,0,' + idStock +')', function (error, results, fields) {
                 });
                 return message;
@@ -205,3 +211,34 @@ function mail(destination, subject, message){
     });
   });
 }
+
+function sendNotification(data) {
+  var headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Authorization": "Basic ZGRlYmE2N2MtNGZjOS00NzAzLThmOTgtN2ZiY2M0ZDQ0MmI1"
+  };
+
+  var options = {
+    host: "onesignal.com",
+    port: 443,
+    path: "/api/v1/notifications",
+    method: "POST",
+    headers: headers
+  };
+
+  var https = require('https');
+  var req = https.request(options, function(res) {
+    res.on('data', function(data) {
+      console.log("Response:");
+      console.log(JSON.parse(data));
+    });
+  });
+
+  req.on('error', function(e) {
+    console.log("ERROR:");
+    console.log(e);
+  });
+
+  req.write(JSON.stringify(data));
+  req.end();
+};
