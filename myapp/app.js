@@ -108,19 +108,19 @@ cron.schedule('0 0 * * *', function(){
 
 		//server connection ne pas toucher
 		host     : 'localhost',
-		/*user     : 'root',
+		user     : 'root',
 		password : '',
-		database : 'inventaire',*/
+		database : 'inventaire',
 
 		//louis
 	/*
 		port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddclean',
+		database : 'bddclean',*/
 
 		//val
-		port     : '8889',
+		/*port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI',*/
