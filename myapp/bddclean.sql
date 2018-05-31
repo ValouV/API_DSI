@@ -201,13 +201,13 @@ CREATE TABLE `uHelisa` (
 --
 
 INSERT INTO `uHelisa` (`ID_ETUDIANT`, `APPRENANT_PRENOM`, `APPRENANT_NOM`, `PHOTO_IDENTITE`, `EMAIL`) VALUES
-('E03879', 'AGUER', 'Victor', 'aguervictor.jpg', 'victor.aguer@epfedu.fr'),
-('E04493', 'BERNADET', 'David', 'bernadetdavid.jpg', 'david.bernadet@epfedu.fr'),
-('E04512', 'DANTY', 'Alexandre', 'dantyalexandre.jpg', 'alexandre.danty@epfedu.fr'),
-('E04770', 'DEGUERRE', 'Lancelot', 'deguerrelancelot.jpg', 'lancelot.deguerre@epfedu.fr'),
-('E04224', 'RIOU', 'Louis', 'rioulouis.jpg', 'louis.riou@epfedu.fr'),
-('E04804', 'VASSAS', 'Valentin', 'vassasvalentin.jpg', 'valentin.vassas@epfedu.fr'),
-('E04731', 'YVIQUEL', 'Laur�ne', 'yviquellaurene.jpg', 'laurene.yviquel@epfedu.fr');
+('E03879', 'Victor', 'AGUER', 'aguervictor.jpg', 'victor.aguer@epfedu.fr'),
+('E04493', 'David', 'BERNADET', 'bernadetdavid.jpg', 'david.bernadet@epfedu.fr'),
+('E04512', 'Alexandre', 'DANTY', 'dantyalexandre.jpg', 'alexandre.danty@epfedu.fr'),
+('E04770', 'Lancelot', 'DEGUERRE', 'deguerrelancelot.jpg', 'lancelot.deguerre@epfedu.fr'),
+('E04224', 'Louis', 'RIOU', 'rioulouis.jpg', 'louis.riou@epfedu.fr'),
+('E04804', 'Valentin', 'VASSAS', 'vassasvalentin.jpg', 'valentin.vassas@epfedu.fr'),
+('E04731', 'Laurène', 'YVIQUEL', 'yviquellaurene.jpg', 'laurene.yviquel@epfedu.fr');
 
 -- --------------------------------------------------------
 
