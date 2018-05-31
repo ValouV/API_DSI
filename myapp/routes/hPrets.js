@@ -58,8 +58,8 @@ router.get('/:hprets_id', function(req, res, next) {
 
 //modify hprets
 router.patch('/:hprets_id', function(req, res, next) {
-  if (req.body.depart !== undefined && req.body.retourPrevu !== undefined && req.body.retourEffectif !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined){
-	connection.query('UPDATE historiquepret SET depart = "' + req.body.depart + '", retourPrevu = "' + req.body.retourPrevu + '", retourEffectif = "' + req.body.retourEffectif +'", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ', idUserHelisa = ' + req.body.idUserHelisa + ' WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
+  if (req.body.depart !== undefined && req.body.retourPrevu !== undefined && req.body.retourEffectif !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined && req.body.siteEPF !== undefined){
+	connection.query('UPDATE historiquepret SET depart = "' + req.body.depart + '", retourPrevu = "' + req.body.retourPrevu + '", retourEffectif = "' + req.body.retourEffectif +'", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ', idUserHelisa = ' + req.body.idUserHelisa + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -94,8 +94,9 @@ router.post('/', function(req, res, next) {
     var date1_ms = new Date(date1.replace(/-/g,'/'));
     var date2_ms = new Date(date2.replace(/-/g,'/'));
     if(date1_ms>date2_ms){
-    connection.query('SELECT isStock FROM objet WHERE objet.actif = 1 AND objet.id = ' + req.body.idObjet, function (error, objet, fields) {
+    connection.query('SELECT isStock, siteEPF FROM objet WHERE objet.actif = 1 AND objet.id = ' + req.body.idObjet, function (error, objet, fields) {
       if(!objet.length || (objet[0].isStock == 1)){
+        var siteEPF = objet[0].siteEPF;
         res.send(JSON.stringify({"status": 500, "error": "Unknown loan object", "response": null}));
       } else {
         connection.query('SELECT id FROM historiquepret WHERE retourEffectif = "0000-00-00 00:00:00" AND idObjet = ' + req.body.idObjet, function (error, pret, fields) {
@@ -108,7 +109,7 @@ router.post('/', function(req, res, next) {
               } else {
             var idUser = jwt.decode(req.token).iduser;
             var depart = moment().format();
-            connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa) VALUES ("' + depart + '","' + req.body.retourPrevu + '","0000-00-00 00:00:00",' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'")', function (error, results, fields) {
+            connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa, siteEPF) VALUES ("' + depart + '","' + req.body.retourPrevu + '","0000-00-00 00:00:00",' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'",' siteEPF ')', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
                 //If there is error, we send the error in the error section with 500 status

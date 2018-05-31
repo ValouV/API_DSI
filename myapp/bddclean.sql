@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le :  mar. 29 mai 2018 à 22:07
+-- Généré le :  jeu. 31 mai 2018 à 22:49
 -- Version du serveur :  5.6.38
 -- Version de PHP :  7.0.12
 
@@ -111,16 +111,17 @@ CREATE TABLE `historiquepret` (
   `retourEffectif` datetime NOT NULL,
   `idUserAdmin` int(11) NOT NULL,
   `idObjet` int(11) NOT NULL,
-  `idUserHelisa` varchar(255) NOT NULL
+  `idUserHelisa` varchar(255) NOT NULL,
+  `siteEPF` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `historiquepret`
 --
 
-INSERT INTO `historiquepret` (`id`, `depart`, `retourPrevu`, `retourEffectif`, `idUserAdmin`, `idObjet`, `idUserHelisa`) VALUES
-(1, '2018-05-27 11:00:00', '2018-07-03 00:00:00', '0000-00-00 00:00:00', 1, 9, 'E03879'),
-(2, '2018-05-29 08:00:00', '2018-06-01 13:00:00', '2018-06-08 10:00:00', 1, 10, 'E03879');
+INSERT INTO `historiquepret` (`id`, `depart`, `retourPrevu`, `retourEffectif`, `idUserAdmin`, `idObjet`, `idUserHelisa`, `siteEPF`) VALUES
+(1, '2018-05-27 11:00:00', '2018-07-03 00:00:00', '0000-00-00 00:00:00', 1, 9, 'E03879', 1),
+(2, '2018-05-29 08:00:00', '2018-06-01 13:00:00', '2018-06-08 10:00:00', 1, 10, 'E03879', 1);
 
 -- --------------------------------------------------------
 
@@ -133,21 +134,22 @@ CREATE TABLE `historiquestock` (
   `arrivée` datetime NOT NULL,
   `depart` datetime NOT NULL,
   `idUserAdmin` int(11) NOT NULL,
-  `idObjet` int(11) NOT NULL
+  `idObjet` int(11) NOT NULL,
+  `siteEPF` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `historiquestock`
 --
 
-INSERT INTO `historiquestock` (`id`, `arrivée`, `depart`, `idUserAdmin`, `idObjet`) VALUES
-(1, '2018-05-01 15:00:00', '0000-00-00 00:00:00', 1, 1),
-(2, '2018-05-01 15:05:00', '0000-00-00 00:00:00', 1, 2),
-(3, '2018-05-01 15:10:00', '0000-00-00 00:00:00', 1, 3),
-(4, '2018-05-01 16:00:00', '0000-00-00 00:00:00', 1, 4),
-(9, '2018-05-01 14:00:00', '2018-05-10 10:00:00', 1, 5),
-(10, '2018-05-01 17:00:00', '2018-05-15 10:00:00', 1, 6),
-(11, '2018-05-18 15:00:00', '0000-00-00 00:00:00', 3, 6);
+INSERT INTO `historiquestock` (`id`, `arrivée`, `depart`, `idUserAdmin`, `idObjet`, `siteEPF`) VALUES
+(1, '2018-05-01 15:00:00', '0000-00-00 00:00:00', 1, 1, 1),
+(2, '2018-05-01 15:05:00', '0000-00-00 00:00:00', 1, 2, 1),
+(3, '2018-05-01 15:10:00', '0000-00-00 00:00:00', 1, 3, 1),
+(4, '2018-05-01 16:00:00', '0000-00-00 00:00:00', 1, 4, 1),
+(9, '2018-05-01 14:00:00', '2018-05-10 10:00:00', 1, 5, 1),
+(10, '2018-05-01 17:00:00', '2018-05-15 10:00:00', 1, 6, 1),
+(11, '2018-05-18 15:00:00', '0000-00-00 00:00:00', 3, 6, 2);
 
 -- --------------------------------------------------------
 

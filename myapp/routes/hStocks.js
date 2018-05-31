@@ -58,8 +58,8 @@ router.get('/:hstocks_id', function(req, res, next) {
 
 //modify hprets
 router.patch('/:hstocks_id', function(req, res, next) {
-  if(req.body.depart !== undefined && req.body.arrivee !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined ){
-    	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
+  if(req.body.depart !== undefined && req.body.arrivee !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined && req.body.siteEPF){
+    	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' AND siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
 	  		//If there is error, we send the error in the error section with 500 status
@@ -88,19 +88,20 @@ router.delete('/:hstocks_id', function(req, res, next) {
 //create hprets
 router.post('/', function(req, res, next) {
   if (req.body.idObjet !== undefined){
-    connection.query('SELECT isStock FROM objet WHERE objet.actif = 1 AND id = ' + req.body.idObjet, function (error, objet, fields) {
+    connection.query('SELECT isStock, siteEPF FROM objet WHERE objet.actif = 1 AND id = ' + req.body.idObjet, function (error, objet, fields) {
       if (!objet.length){
         res.send(JSON.stringify({"status": 500, "error": "Object not found", "response": null}));
       } else if (objet[0].isStock == 0){
         res.send(JSON.stringify({"status": 500, "error": "Object is not Stock", "response": null}));
       } else {
+        var siteEPF= objet[0].siteEPF
         var idUser = jwt.decode(req.token).iduser;
         var arrival = moment().format();
         connection.query('SELECT * FROM historiquestock WHERE depart = "0000-00-00 00:00:00" AND idObjet =' + req.body.idObjet, function (error, historique, fields) {
           if (historique.length){
             res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
           } else {
-            connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet) VALUES ("' + arrival + '","' + '0000-00-00 00:00:00' + '",' + idUser + ',' + req.body.idObjet + ')', function (error, results, fields) {
+            connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + arrival + '","' + '0000-00-00 00:00:00' + '",' + idUser + ',' + req.body.idObjet + ',' + siteEPF ')', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
                 //If there is error, we send the error in the error section with 500 status
