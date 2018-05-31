@@ -128,15 +128,27 @@ router.delete('/:objet_id', function(req, res, next) {
 
 //create object
 //TODO vérfier avec l'équipe Application que c'est peut être eux qui nous donnent l'id. Si oui vérifier id et créer route prochain id
-//TODO vérifier que la catégorie existe
 router.post('/', function(req, res, next) {
-  connection.query('SELECT siteEPF from user WHERE id = ' + jwt.decode(req.token).iduser, function (error, site, fields2) {
+  connection.query('SELECT siteEPF from user WHERE id = ' + jwt.decode(req.headers['x-access-token']).iduser, function (error, site, fields2) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
     } else {
-      console.log(site);
-      connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + site[0].siteEPF + ',' + req.body.idCategorie + ',' + jwt.decode(req.token).iduser +')', function (error, results, fields) {
+     // console.log(site);
+      if (isNaN(req.body.idCategorie)) {res.send(JSON.stringify({"status": 500, "error": error, "response": "La catégorie d'objet doit être un nombre"}))}
+else {
+      connection.query('SELECT id FROM categorie WHERE id='+req.body.idCategorie, function (error, results2, fields) {
+        if(error){
+          res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+          //If there is error, we send the error in the error section with 500 status
+        }
+        if (!results2.length) {res.send(JSON.stringify({"status": 500, "error": error, "response": "Cette catégorie d'objet n'existe pas"}))}
+         else {
+          //res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+          //If there is no error, all is good and response is 200OK.
+
+
+      connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + site[0].siteEPF + ',' + req.body.idCategorie + ',' + jwt.decode(req.headers['x-access-token']).iduser +')', function (error, results, fields) {
         if(error){
           res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
           //If there is error, we send the error in the error section with 500 status
@@ -149,12 +161,15 @@ router.post('/', function(req, res, next) {
               } else {
                 var categorie = maCategorie[0];
                 var objet = monObjet[0];
-                res.send(JSON.stringify({"status": 200, "error": null, "response": {objet, categorie}}));
+                res.send(JSON.stringify({"status": 200, "error": null, "response": {objet, categorie}, "results": results}));
               }
             });
           });
         }
       });
+      }
+      });
+}
     }
   });
 });

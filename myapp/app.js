@@ -45,13 +45,13 @@ app.use(function(req, res, next){
 		user     : 'root',
 		password : '',
 		database : 'inventaire',
-/*
+
 		//louis
 		
-		port     : '3306',
+		/*port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1',*/
+		database : 'bddclean',*/
 
 		//val
 		/*port     : '8889',
@@ -109,11 +109,11 @@ cron.schedule('0 0 * * *', function(){
 		database : 'inventaire',
 
 		//louis
-		/*
+	/*	
 		port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddv1',*/
+		database : 'bddclean',*/
 
 		//val
 		/*port     : '8889',
