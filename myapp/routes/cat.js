@@ -7,38 +7,47 @@ router.use(function(req, res, next) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
   // decode token
   if (token) {
+    jwt.verify(token, 'shit', function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        req.token = token;
+      }
+    });
     // verifies secret and checks exp
     connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
-			if ([1,2].indexOf(results[0].role) !== -1 ){
-				next();
-			} else {
-				return res.status(403).send({
-		        success: false,
-		        message: 'You should be admin to see this.'
-		    });
-			}
-		});
+      if ([1,2].indexOf(results[0].role) !== -1 ){
+        next();
+      } else {
+        return res.status(403).send({
+          success: false,
+          message: 'You should be admin to see this.'
+        });
+      }
+    });
   } else {
     // if there is no token
     // return an error
     return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
+      success: false,
+      message: 'No token provided.'
     });
   }
 });
 
 //get all categorie
 router.get('/', function(req, res, next) {
-	connection.query('SELECT * from categorie', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('SELECT * from categorie', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 
@@ -196,15 +205,15 @@ router.get('/prets', function(req, res, next) {
 //get specific categorie
 router.get('/:cat_id', function(req, res, next) {
 
-	connection.query('SELECT categorie.* from categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('SELECT categorie.* from categorie WHERE id = ' + req.params.cat_id, function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 
 });
 

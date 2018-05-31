@@ -7,65 +7,74 @@ router.use(function(req, res, next) {
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
   // decode token
   if (token) {
+    jwt.verify(token, 'shit', function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        req.token = token;
+      }
+    });
     // verifies secret and checks exp
     connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
-			if ([1,2].indexOf(results[0].role) !== -1 ){
-				next();
-			} else {
-				return res.status(403).send({
-		        success: false,
-		        message: 'You should be admin to see this.'
-		    });
-			}
-		});
+      if ([1,2].indexOf(results[0].role) !== -1 ){
+        next();
+      } else {
+        return res.status(403).send({
+          success: false,
+          message: 'You should be admin to see this.'
+        });
+      }
+    });
   } else {
     // if there is no token
     // return an error
     return res.status(403).send({
-        success: false,
-        message: 'No token provided.'
+      success: false,
+      message: 'No token provided.'
     });
   }
 });
 
 //get all limits
 router.get('/', function(req, res, next) {
-	connection.query('SELECT catlimite.*, categorie.nom from catlimite, categorie WHERE catlimite.idCategorie = categorie.id', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('SELECT catlimite.*, categorie.nom from catlimite, categorie WHERE catlimite.idCategorie = categorie.id', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 //get specific limit
 router.get('/:climit_id', function(req, res, next) {
-	connection.query('SELECT catlimite.*, categorie.nom FROM catlimite, categorie WHERE catlimite.id = ' + req.params.climit_id +' AND catlimite.idCategorie = categorie.id', function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('SELECT catlimite.*, categorie.nom FROM catlimite, categorie WHERE catlimite.id = ' + req.params.climit_id +' AND catlimite.idCategorie = categorie.id', function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 //CETTE ROUTE EST DEGUEU ET C'EST LA FAUTE DE LAURENE
 router.patch('/updatebackoffice', function(req, res, next) {
   if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
-	connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ' WHERE idCategorie = ' + req.body.idCategorie + ' AND siteEPF = ' + req.body.siteEPF , function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+    connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ' WHERE idCategorie = ' + req.body.idCategorie + ' AND siteEPF = ' + req.body.siteEPF , function (error, results, fields) {
+      if(error){
+        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+        //If there is error, we send the error in the error section with 500 status
+      } else {
+        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+        //If there is no error, all is good and response is 200OK.
+      }
+    });
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
   }
@@ -74,15 +83,15 @@ router.patch('/updatebackoffice', function(req, res, next) {
 //modify limit
 router.patch('/:climit_id', function(req, res, next) {
   if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
-	connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ', idCategorie = ' + req.body.idCategorie + ', siteEPF = ' + req.body.siteEPF +' WHERE id = ' + req.params.climit_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+    connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ', idCategorie = ' + req.body.idCategorie + ', siteEPF = ' + req.body.siteEPF +' WHERE id = ' + req.params.climit_id, function (error, results, fields) {
+      if(error){
+        res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+        //If there is error, we send the error in the error section with 500 status
+      } else {
+        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+        //If there is no error, all is good and response is 200OK.
+      }
+    });
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
   }
@@ -90,15 +99,15 @@ router.patch('/:climit_id', function(req, res, next) {
 
 //delete limit
 router.delete('/:climit_id', function(req, res, next) {
-	connection.query('DELETE FROM catlimite WHERE id = ' + req.params.climit_id, function (error, results, fields) {
-	  	if(error){
-	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-	  		//If there is error, we send the error in the error section with 500 status
-	  	} else {
-  			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-  			//If there is no error, all is good and response is 200OK.
-	  	}
-  	});
+  connection.query('DELETE FROM catlimite WHERE id = ' + req.params.climit_id, function (error, results, fields) {
+    if(error){
+      res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      //If there is no error, all is good and response is 200OK.
+    }
+  });
 });
 
 //create limit
