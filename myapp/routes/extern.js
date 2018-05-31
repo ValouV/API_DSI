@@ -28,6 +28,7 @@ router.use(function(req, res, next) {
   }
 });
 
+//TODO fix
 router.get('/', function(req, res, next) {
   connection.query('SELECT id, nom from categorie', function (error, results, fields) {
     if(error){
