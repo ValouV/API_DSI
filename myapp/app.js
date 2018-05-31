@@ -45,16 +45,16 @@ app.use(function(req, res, next){
 		user     : 'root',
 		password : '',
 		database : 'inventaire',
-
+		/*
 		//louis
-		
-		/*port     : '3306',
+
+		port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddclean',*/
+		database : 'bddclean',
 
 		//val
-		/*port     : '8889',
+		port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI',*/
@@ -65,9 +65,13 @@ app.use(function(req, res, next){
 	next();
 });
 
-//TODO notifications
 //TODO vérifier la sécurité au minimum de la route de connection
+//http://expressjs.com/fr/advanced/best-practice-security.html
 //TODO commentaires
+//TODO fermer connection
+//TODO vérifer les types
+//TODO vérifier Tableau /cat/stocks
+//TODO route /extern
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
@@ -104,19 +108,19 @@ cron.schedule('0 0 * * *', function(){
 
 		//server connection ne pas toucher
 		host     : 'localhost',
-		user     : 'root',
+		/*user     : 'root',
 		password : '',
-		database : 'inventaire',
+		database : 'inventaire',*/
 
 		//louis
-	/*	
+	/*
 		port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddclean',*/
+		database : 'bddclean',
 
 		//val
-		/*port     : '8889',
+		port     : '8889',
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI',*/
