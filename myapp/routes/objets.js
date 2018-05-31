@@ -194,7 +194,9 @@ router.get('/state/:objet_id', function(req, res, next){
               res.send(JSON.stringify({"status": 200, "error": null, "response":{ "mode":1 , objet, categorie }}));
             } else {
               if (objet.isStock == 1) {
-                res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie }}));
+                connection.query('SELECT * from objet WHERE actif = 1 and isStock = 1 AND idCategorie = ' + objet.idCategorie + ' AND siteEPF = ' + objet.siteEPF + ';' , function(error6, compte, fields6){
+                  res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie, "reste":compte.length }}));
+                });
               } else {
                 connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND idObjet = ' + req.params.objet_id + ' AND retourEffectif = "0000-00-00 00:00:00"', function(error2, monPret, fields2){
                   if(error){
