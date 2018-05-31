@@ -155,7 +155,7 @@ function alerteStock(results){
                 mail(results, "Alerte Stock", message);
                 var messageNotif = {
                   app_id: "9f332b69-e10b-446d-8d77-0b452f8ba64a",
-                  contents: {"fr": message},
+                  contents: {"en": message},
                   included_segments: ["All"]
                 };
                 sendNotification(messageNotif);
