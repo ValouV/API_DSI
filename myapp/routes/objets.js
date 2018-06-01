@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
+var moment = require('moment');
 
 
 router.use(function(req, res, next) {
@@ -18,6 +19,7 @@ router.use(function(req, res, next) {
       }
     });
     // verifies secret and checks exp
+    console.log('SELECT role from user WHERE id = '+ jwt.decode(token).iduser);
     connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
 			if ([1,2].indexOf(results[0].role) !== -1 ){
 				next();
@@ -131,6 +133,11 @@ router.delete('/:objet_id', function(req, res, next) {
       //If there is error, we send the error in the error section with 500 status
     } else {
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+      console.log(moment().format("YYYY-MM-DD h:mm:ss"));
+      connection.query('UPDATE historiquepret SET retourEffectif = "' + moment().format("YYYY-MM-DD HH:mm:ss") + '" WHERE idObjet = ' + req.params.objet_id, function(error, hist, fields){
+        connection.query('DELETE alertepret.* FROM alertepret LEFT JOIN historiquepret AS h ON alertepret.idHistoriquePret = h.id LEFT JOIN objet AS obj ON h.idObjet = obj.id WHERE obj.id =' + req.params.objet_id, function(error, alerte, fields){
+        });
+      });
       //If there is no error, all is good and response is 200OK.
     }
   });

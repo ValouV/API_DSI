@@ -99,7 +99,7 @@ router.patch('/:hprets_id', function(req, res, next) {
 router.post('/', function(req, res, next) {
   if (req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined && req.body.retourPrevu !== undefined){
     var date1 = req.body.retourPrevu;
-    var date2 = moment().format();
+    var date2 = moment().format("YYYY-MM-DD HH:mm:ss");
     var date1_ms = new Date(date1.replace(/-/g,'/'));
     var date2_ms = new Date(date2.replace(/-/g,'/'));
     if(date1_ms>date2_ms){
@@ -117,7 +117,7 @@ router.post('/', function(req, res, next) {
                   res.send(JSON.stringify({"status": 500, "error": "Unknown student", "response": null}));
               } else {
             var idUser = jwt.decode(req.token).iduser;
-            var depart = moment().format();
+            var depart = moment().format("YYYY-MM-DD HH:mm:ss");
             connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa, siteEPF) VALUES ("' + depart + '","' + req.body.retourPrevu + '","0000-00-00 00:00:00",' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'",' + siteEPF + ')', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -143,7 +143,7 @@ router.post('/', function(req, res, next) {
 
 //retour de pret
 router.patch('/retour/:hprets_id', function(req, res, next) {
-  connection.query('UPDATE historiquepret SET retourEffectif ="' + moment().format() + '" WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
+  connection.query('UPDATE historiquepret SET retourEffectif ="' + moment().format("YYYY-MM-DD HH:mm:ss") + '" WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
         //If there is error, we send the error in the error section with 500 status
