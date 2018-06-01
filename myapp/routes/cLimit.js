@@ -113,7 +113,7 @@ router.delete('/:climit_id', function(req, res, next) {
 //create limit
 router.post('/', function(req, res, next) {
   if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
-    connection.query('SELECT id from catlimite WHERE siteEPF = ' + req.body.siteEPF + 'idCategorie = ' + req.body.idCategorie, function (error, results, fields) {
+    connection.query('SELECT id from catlimite WHERE siteEPF = ' + req.body.siteEPF + ' AND idCategorie = ' + req.body.idCategorie, function (error, results, fields) {
       if (results.length){
         res.send(JSON.stringify({"status": 500, "error": "Limit already exists", "response": null}));
       } else {
