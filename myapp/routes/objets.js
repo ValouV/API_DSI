@@ -123,6 +123,7 @@ router.patch('/:objet_id', function(req, res, next) {
 });
 
 //delete object
+//TODO supprimer alerte associée, fermer prêt, foermer stock
 router.delete('/:objet_id', function(req, res, next) {
   connection.query('UPDATE objet SET actif = 0 WHERE id = ' + req.params.objet_id, function (error, results, fields) {
     if(error){
