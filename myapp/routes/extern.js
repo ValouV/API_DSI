@@ -87,8 +87,9 @@ router.get('/', function(req, res, next) {
               req.materielsobjet[i]["etat_montpellier"] = results.length;
             }
           }
+                  if (i==req.nbrcategorie - 1){res.send(JSON.stringify({"status": 200, "error": null, "response": req.materielsobjet}))};
         });
-        if (i==req.nbrcategorie - 1){res.send(JSON.stringify({"status": 200, "error": null, "response": req.materielsobjet}))};
+
       }
     }
   });
