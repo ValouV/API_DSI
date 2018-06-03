@@ -67,6 +67,7 @@ router.get('/:hprets_id', function(req, res, next) {
 
 //modify hprets
 router.patch('/:hprets_id', function(req, res, next) {
+  //on vérfie qu'on a tous les paramètres
   if (req.body.depart !== undefined && req.body.retourPrevu !== undefined && req.body.retourEffectif !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined && req.body.siteEPF !== undefined){
 	connection.query('UPDATE historiquepret SET depart = "' + req.body.depart + '", retourPrevu = "' + req.body.retourPrevu + '", retourEffectif = "' + req.body.retourEffectif +'", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ', idUserHelisa = ' + req.body.idUserHelisa + ', siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.hprets_id, function (error, results, fields) {
 	  	if(error){
@@ -97,27 +98,33 @@ router.patch('/:hprets_id', function(req, res, next) {
 
 //create hprets
 router.post('/', function(req, res, next) {
+  //on vérifie qu'on a tous les paramètres
   if (req.body.idObjet !== undefined && req.body.idUserHelisa !== undefined && req.body.retourPrevu !== undefined){
     var date1 = req.body.retourPrevu;
     var date2 = moment().format("YYYY-MM-DD HH:mm:ss");
     var date1_ms = new Date(date1.replace(/-/g,'/'));
     var date2_ms = new Date(date2.replace(/-/g,'/'));
+    //on vérifie que la date de retour prévue est après la date d'aujourd'hui
     if(date1_ms>date2_ms){
+      //on récupère les informations de l'objet
     connection.query('SELECT isStock, siteEPF FROM objet WHERE objet.actif = 1 AND objet.id = ' + req.body.idObjet, function (error, objet, fields) {
       if(!objet.length || (objet[0].isStock == 1)){
         var siteEPF = objet[0].siteEPF;
         res.send(JSON.stringify({"status": 500, "error": "Unknown loan object", "response": null}));
       } else {
+        //on vérifie qu'il n'y a pas de prêt en cours
         connection.query('SELECT id FROM historiquepret WHERE retourEffectif = "0000-00-00 00:00:00" AND idObjet = ' + req.body.idObjet, function (error, pret, fields) {
           if(pret.length){
             res.send(JSON.stringify({"status": 500, "error": "Object already in loan", "response": null}));
           } else {
+            //on vérifie qu'on connait l'étudiant
             connection.query('SELECT APPRENANT_NOM FROM uHelisa WHERE ID_ETUDIANT = "' + req.body.idUserHelisa + '"', function (error, eleve, fields) {
               if(!eleve.length){
                   res.send(JSON.stringify({"status": 500, "error": "Unknown student", "response": null}));
               } else {
             var idUser = jwt.decode(req.token).iduser;
             var depart = moment().format("YYYY-MM-DD HH:mm:ss");
+            //on écrit le pret dans la base de données
             connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa, siteEPF) VALUES ("' + depart + '","' + req.body.retourPrevu + '","0000-00-00 00:00:00",' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'",' + siteEPF + '); UPDATE objet SET actif = 1 and isStock = 0 WHERE id = ' + req.body.idObjet + ';', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));

@@ -39,7 +39,7 @@ router.use(function(req, res, next) {
   }
 });
 
-//get all hprets
+//get all hstocks
 router.get('/', function(req, res, next) {
 	connection.query('SELECT * from historiquestock', function (error, results, fields) {
 	  	if(error){
@@ -52,7 +52,7 @@ router.get('/', function(req, res, next) {
   	});
 });
 
-//get specific hprets
+//get specific hstock
 router.get('/:hstocks_id', function(req, res, next) {
 	connection.query('SELECT historiquestock.*, categorie.nom AS "Nom Categorie" from historiquestock, categorie, objet WHERE historiquestock.id = ' + req.params.hstocks_id + ' AND historiquestock.idObjet = objet.id AND objet.idCategorie = categorie.id', function (error, results, fields) {
 	  	if(error){
@@ -65,7 +65,7 @@ router.get('/:hstocks_id', function(req, res, next) {
   	});
 });
 
-//modify hprets
+//modify hstock
 router.patch('/:hstocks_id', function(req, res, next) {
   if(req.body.depart !== undefined && req.body.arrivee !== undefined && req.body.idUserAdmin !== undefined && req.body.idObjet !== undefined && req.body.siteEPF){
     	connection.query('UPDATE historiquestock SET depart = "' + req.body.depart + '", arrivée = "' + req.body.arrivée + '", idUserAdmin = ' + req.body.idUserAdmin + ', idObjet = ' + req.body.idObjet + ' AND siteEPF = ' + req.body.siteEPF + ' WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
@@ -80,7 +80,7 @@ router.patch('/:hstocks_id', function(req, res, next) {
   }
 });
 
-//delete hprets
+//delete hstock
 /*
 router.delete('/:hstocks_id', function(req, res, next) {
 	connection.query('DELETE FROM historiquestock WHERE id = ' + req.params.hstocks_id, function (error, results, fields) {
@@ -96,7 +96,9 @@ router.delete('/:hstocks_id', function(req, res, next) {
 
 //create hprets
 router.post('/', function(req, res, next) {
+  //on vérifie qu'on a tous les objets
   if (req.body.idObjet !== undefined){
+    //on récupère les informations de l'objet
     connection.query('SELECT isStock, siteEPF FROM objet WHERE objet.actif = 1 AND id = ' + req.body.idObjet, function (error, objet, fields) {
       if (!objet.length){
         res.send(JSON.stringify({"status": 500, "error": "Object not found", "response": null}));
@@ -106,10 +108,12 @@ router.post('/', function(req, res, next) {
         var siteEPF= objet[0].siteEPF
         var idUser = jwt.decode(req.token).iduser;
         var arrival = moment().format("YYYY-MM-DD HH:mm:ss");
+        //on vérifie que l'objet n'est pas déjà en stock
         connection.query('SELECT * FROM historiquestock WHERE depart = "0000-00-00 00:00:00" AND idObjet =' + req.body.idObjet, function (error, historique, fields) {
           if (historique.length){
             res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
           } else {
+            //on entre l'objet en stock
             connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + arrival + '","' + '0000-00-00 00:00:00' + '",' + idUser + ',' + req.body.idObjet + ',' + siteEPF + '); UPDATE objet SET actif = 1 and isStock = 1 WHERE id = ' + req.body.idObjet+ ';', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -128,7 +132,10 @@ router.post('/', function(req, res, next) {
   }
 });
 
+
+//route de sortie de stock
 router.patch('/depart/:hstocks_id', function(req, res, next) {
+  //on entre la date de sortie dans la base de données
   connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + moment().format("YYYY-MM-DD HH:mm:ss") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
       console.log(results.affectedRows);
       if(error){
@@ -137,6 +144,7 @@ router.patch('/depart/:hstocks_id', function(req, res, next) {
       } else if (results.affectedRows != 2){
         res.send(JSON.stringify({"status": 500, "error": "Impossible to close this stock", "response": null}));
       } else {
+        //on gère les alertes via une fonction
         var message = alerteStock(req.params.hstocks_id);
         res.send(JSON.stringify({"status": 200, "error": message, "response": results}));
         //If there is no error, all is good and response is 200OK.
@@ -146,29 +154,42 @@ router.patch('/depart/:hstocks_id', function(req, res, next) {
 
 module.exports = router;
 
+//gestion des alertes
 function alerteStock(results){
   var idStock = results;
+  //on récupère les informations d'historique
   connection.query('SELECT * from historiquestock WHERE id = ' + results, function (error, results, fields) {
     var idObjet = results[0].idObjet;
+    //on récupère les informations d'objet
     connection.query('SELECT objet.idCategorie, objet.siteEPF FROM objet WHERE objet.id = ' + idObjet, function (error, results, fields) {
       var idCategorie = results[0].idCategorie;
       var siteEPF = results[0].siteEPF;
       console.log(idStock, idObjet, idCategorie, siteEPF);
+      //on récupère les objets de la catégorie
       connection.query('SELECT id from objet WHERE objet.idCategorie = ' + idCategorie + ' AND objet.siteEPF = ' + siteEPF + ' AND objet.actif = 1 AND objet.isStock = 1', function (error, results, fields) {
         var count = results.length;
+        //on récupère les informations de limite
         connection.query('SELECT limite from catlimite WHERE catlimite.idCategorie = ' + idCategorie + ' AND catlimite.siteEPF = ' + siteEPF, function (error, results, fields) {
           var limite = results[0].limite;
+          //si on est égal ou en dessous de la limite
           if (limite >= count){
+            //on récupère le nom de la catégorie
             connection.query('SELECT nom from categorie WHERE id = ' + idCategorie, function (error, results, fields) {
+              //on crée un message
               var message = "Vous avez atteint la limite pour l'objet de type " + results[0].nom + " sur le site de " + nomSiteEPF(siteEPF) + ". Il vous reste " + count + " objets.";
+              //on récupère les emails
               connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
+                //on envoie un mail
                 mail(results, "Alerte Stock", message);
+                //on crée la notification onesignal
                 var messageNotif = {
                   app_id: "9f332b69-e10b-446d-8d77-0b452f8ba64a",
                   contents: {"en": message},
                   included_segments: ["All"]
                 };
+                //on envoie une notification
                 sendNotification(messageNotif);
+                //on créer l'alerte associée
                 connection.query('INSERT INTO alerteStock(date, message, lu, type, idHistoriqueStock) VALUES ("'+ moment().format("YYYY-MM-DD HH:mm:ss") +'","' + message + '",0,0,' + idStock +')', function (error, results, fields) {
                 });
                 return message;

@@ -40,17 +40,21 @@ router.use(function(req, res, next) {
 
 //get all active objets
 router.get('/', function(req, res, next) {
+  //selection des informations d'alertes de pret
   connection.query('SELECT alertepret.*, historiquepret.idUserAdmin, objet.id AS idObjet from alertepret, historiquepret, objet WHERE alertepret.idHistoriquePret = historiquepret.id AND historiquepret.idObjet = objet.id', function (error, alertesPret, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
     } else {
+      //selection des informations d'alertes de stock
       connection.query('SELECT alertestock.*, historiquestock.idUserAdmin, objet.id AS idObjet from alertestock, historiquestock, objet WHERE alertestock.idHistoriqueStock = historiquestock.id AND historiquestock.idObjet = objet.id', function (error, alertesStock, fields) {
         if(error){
           res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
           //If there is error, we send the error in the error section with 500 status
         } else {
+          //envoi des alertes
           res.send(JSON.stringify({"status": 200, "error": null, "response": {alertesPret, alertesStock}}));
+          //les alertes sont considérées comme lues
           connection.query('UPDATE alertestock SET lu = 1; UPDATE alertepret SET lu = 1;'), function (error, results, fields) {
             if(error){
               console.log(error);

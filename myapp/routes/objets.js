@@ -21,15 +21,15 @@ router.use(function(req, res, next) {
     // verifies secret and checks exp
     console.log('SELECT role from user WHERE id = '+ jwt.decode(token).iduser);
     connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
-			if ([1,2].indexOf(results[0].role) !== -1 ){
-				next();
-			} else {
-				return res.status(403).send({
-		        success: false,
-		        message: 'You should be admin to see this.'
-		    });
-			}
-		});
+      if ([1,2].indexOf(results[0].role) !== -1 ){
+        next();
+      } else {
+        return res.status(403).send({
+          success: false,
+          message: 'You should be admin to see this.'
+        });
+      }
+    });
   } else {
     // if there is no token
     // return an error
@@ -80,6 +80,7 @@ router.get('/:objet_id', function(req, res, next) {
   });
 });
 
+//retourne l'historique d'un objet
 router.get('/:objet_id/historique', function(req, res, next) {
   connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM AS "Nom emprunteur", uHelisa.APPRENANT_PRENOM AS "Prénom Empruteur" from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = ' + req.params.objet_id, function (error, historiquepret, fields) {
     if(error){
@@ -102,12 +103,15 @@ router.get('/:objet_id/historique', function(req, res, next) {
 
 //modify object
 router.patch('/:objet_id', function(req, res, next) {
+  //on vérifie qu'on a tous les paramètres
   if (req.body.actif !== undefined && req.body.isStock !== undefined && req.body.commentaire !== undefined && req.body.idCategorie !== undefined){
+    //on récupère le site via l'utilisateur
     connection.query('SELECT siteEPF FROM user WHERE id = ' + jwt.decode(req.token).iduser, function (error, site, fields2) {
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": "User not recognized"}));
         //If there is error, we send the error in the error section with 500 status
       } else {
+        //on inclus le nouvel objet dans la base de données
         connection.query('UPDATE objet SET actif = ' + req.body.actif + ', isStock = ' + req.body.isStock + ', commentaire = "' + req.body.commentaire +'", siteEPF = ' + site[0].siteEPF + ', idCategorie = ' + req.body.idCategorie + ', idUser = ' + jwt.decode(req.token).iduser + ' WHERE id = ' + req.params.objet_id, function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -134,8 +138,13 @@ router.delete('/:objet_id', function(req, res, next) {
     } else {
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
       console.log(moment().format("YYYY-MM-DD h:mm:ss"));
+      //fermeture des prets en cours
       connection.query('UPDATE historiquepret SET retourEffectif = "' + moment().format("YYYY-MM-DD HH:mm:ss") + '" WHERE idObjet = ' + req.params.objet_id, function(error, hist, fields){
-        connection.query('DELETE alertepret.* FROM alertepret LEFT JOIN historiquepret AS h ON alertepret.idHistoriquePret = h.id LEFT JOIN objet AS obj ON h.idObjet = obj.id WHERE obj.id =' + req.params.objet_id, function(error, alerte, fields){
+        //fermeture des stocks en cours
+        connection.query('UPDATE historiquestock SET depart = "' + moment().format("YYYY-MM-DD HH:mm:ss") + '" WHERE idObjet = ' + req.params.objet_id, function(error, hist, fields){
+          //supression des alertes
+          connection.query('DELETE alertepret.* FROM alertepret LEFT JOIN historiquepret AS h ON alertepret.idHistoriquePret = h.id LEFT JOIN objet AS obj ON h.idObjet = obj.id WHERE obj.id =' + req.params.objet_id, function(error, alerte, fields){
+          });
         });
       });
       //If there is no error, all is good and response is 200OK.
@@ -144,72 +153,79 @@ router.delete('/:objet_id', function(req, res, next) {
 });
 
 //create object
-//TODO vérfier avec l'équipe Application que c'est peut être eux qui nous donnent l'id. Si oui vérifier id et créer route prochain id
 router.post('/', function(req, res, next) {
+  //on récupère le siteEPF
   connection.query('SELECT siteEPF from user WHERE id = ' + jwt.decode(req.headers['x-access-token']).iduser, function (error, site, fields2) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
     } else {
-     // console.log(site);
+      //on vérifie que la catégorie d'objet est un int
       if (isNaN(req.body.idCategorie)) {res.send(JSON.stringify({"status": 500, "error": error, "response": "La catégorie d'objet doit être un nombre"}))}
-else {
-      connection.query('SELECT id FROM categorie WHERE id='+req.body.idCategorie, function (error, results2, fields) {
-        if(error){
-          res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-          //If there is error, we send the error in the error section with 500 status
-        }
-        if (!results2.length) {res.send(JSON.stringify({"status": 500, "error": error, "response": "Cette catégorie d'objet n'existe pas"}))}
-         else {
-          //res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-          //If there is no error, all is good and response is 200OK.
+      else {
+        //on vérifie que la catégorie existe
+        connection.query('SELECT id FROM categorie WHERE id='+req.body.idCategorie, function (error, results2, fields) {
+          if(error){
+            res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+            //If there is error, we send the error in the error section with 500 status
+          }
+          if (!results2.length) {res.send(JSON.stringify({"status": 500, "error": error, "response": "Cette catégorie d'objet n'existe pas"}))}
+          else {
+            //res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+            //If there is no error, all is good and response is 200OK.
 
-
-      connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + site[0].siteEPF + ',' + req.body.idCategorie + ',' + jwt.decode(req.headers['x-access-token']).iduser +')', function (error, results, fields) {
-        if(error){
-          res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-          //If there is error, we send the error in the error section with 500 status
-        } else {
-          connection.query('SELECT * from objet WHERE id = ' + results.insertId , function (error, monObjet, fields) {
-            connection.query('SELECT * from categorie WHERE id = ' + monObjet[0].idCategorie + ';', function(error3, maCategorie, fields3){
+            //on crée l'objet
+            connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + site[0].siteEPF + ',' + req.body.idCategorie + ',' + jwt.decode(req.headers['x-access-token']).iduser +')', function (error, results, fields) {
               if(error){
-                res.send(JSON.stringify({"status": 500, "error": error3, "response": null}));
+                res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
                 //If there is error, we send the error in the error section with 500 status
               } else {
-                var categorie = maCategorie[0];
-                var objet = monObjet[0];
-                res.send(JSON.stringify({"status": 200, "error": null, "response": {objet, categorie}, "results": results}));
+                connection.query('SELECT * from objet WHERE id = ' + results.insertId , function (error, monObjet, fields) {
+                  connection.query('SELECT * from categorie WHERE id = ' + monObjet[0].idCategorie + ';', function(error3, maCategorie, fields3){
+                    if(error){
+                      res.send(JSON.stringify({"status": 500, "error": error3, "response": null}));
+                      //If there is error, we send the error in the error section with 500 status
+                    } else {
+                      var categorie = maCategorie[0];
+                      var objet = monObjet[0];
+                      res.send(JSON.stringify({"status": 200, "error": null, "response": {objet, categorie}, "results": results}));
+                    }
+                  });
+                });
               }
             });
-          });
-        }
-      });
+          }
+        });
       }
-      });
-}
     }
   });
 });
 
+//donne l'état d'un objet
 router.get('/state/:objet_id', function(req, res, next){
+  //on récupère l'objet
   connection.query('SELECT * from objet WHERE id = ' + req.params.objet_id, function (error, monObjet, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
     } else {
+      //si il n'existe pas le mode est 0
       if (!monObjet.length){
         res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":0 }}));
       } else {
         var objet = monObjet[0];
+        //on récupère sa catégorie
         connection.query('SELECT * from categorie WHERE id = ' + objet.idCategorie + ';', function(error3, maCategorie, fields3){
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error3, "response": null}));
             //If there is error, we send the error in the error section with 500 status
           } else {
             var categorie = maCategorie[0];
+            //si il est inactif le mode est 1
             if (objet.actif == 0){
               res.send(JSON.stringify({"status": 200, "error": null, "response":{ "mode":1 , objet, categorie }}));
             } else {
+              //si il est en stock le mode est 2
               if (objet.isStock == 1) {
                 connection.query('SELECT * from objet WHERE actif = 1 and isStock = 1 AND idCategorie = ' + objet.idCategorie + ' AND siteEPF = ' + objet.siteEPF + ';' , function(error6, compte, fields6){
                   res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie, "reste":compte.length }}));
@@ -220,10 +236,12 @@ router.get('/state/:objet_id', function(req, res, next){
                     res.send(JSON.stringify({"status": 500, "error": error2, "response": null}));
                     //If there is error, we send the error in the error section with 500 status
                   } else {
+                    //si il est en flotte de prêt sans être en prêt le mode est 3
                     if (!monPret.length){
                       res.send(JSON.stringify({"status": 200, "error": null, "response":  { "mode":3 , objet, categorie }}));
                     } else {
                       var pret = monPret[0];
+                      //si il est actuellement prêté le mode est 4
                       res.send(JSON.stringify({"status": 200, "error": null, "response":  { "mode":4 , objet, categorie, pret }}));
                     }
                   }

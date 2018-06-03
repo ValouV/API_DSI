@@ -63,7 +63,8 @@ router.get('/:climit_id', function(req, res, next) {
   });
 });
 
-//CETTE ROUTE EST DEGUEU ET C'EST LA FAUTE DE LAURENE
+//sur le tableau du front-end on récupère une catégorie via son site et sa catégorie
+//TODO si la limite est 0 supprimer la limite
 router.patch('/updatebackoffice', function(req, res, next) {
   if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
     connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ' WHERE idCategorie = ' + req.body.idCategorie + ' AND siteEPF = ' + req.body.siteEPF , function (error, results, fields) {
@@ -81,6 +82,7 @@ router.patch('/updatebackoffice', function(req, res, next) {
 });
 
 //modify limit
+//meme chose via l'id
 router.patch('/:climit_id', function(req, res, next) {
   if (req.body.limite !== undefined && req.body.idCategorie !== undefined && req.body.siteEPF !== undefined){
     connection.query('UPDATE catlimite SET limite = ' + req.body.limite + ', idCategorie = ' + req.body.idCategorie + ', siteEPF = ' + req.body.siteEPF +' WHERE id = ' + req.params.climit_id, function (error, results, fields) {

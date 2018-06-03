@@ -28,6 +28,7 @@ router.use(function(req, res, next) {
   }
 });
 
+//on renvoie les informations de stock et de pret sous la même forme que la route cat/stocks/ sans les informations de limites
 router.get('/', function(req, res, next) {
   connection.query('SELECT id, nom from categorie', function (error, results, fields) {
     if(error){

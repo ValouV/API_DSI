@@ -37,7 +37,7 @@ router.use(function(req, res, next) {
   }
 });
 
-//get all categorie
+//get all categories
 router.get('/', function(req, res, next) {
   connection.query('SELECT * from categorie', function (error, results, fields) {
     if(error){
@@ -51,23 +51,22 @@ router.get('/', function(req, res, next) {
 });
 
 
-
+//cette route renvoie un tableau des stocks par catégorie lisible par le front-end angular
 router.get('/stocks', function(req, res, next) {
   connection.query('SELECT id, nom from categorie', function (error, results, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
     } else {
+      //on regarde combien de catégories on a
       req.categorie = results;
       req.nbrcategorie = results.length;
-      //console.log(req.nbrcategorie);
 
       req.materielsobjet = [{}];
-
+      //pour chaque catégorie
       for (let i = 0; i < req.nbrcategorie; i++) {
-        //console.log(req.categorie[i]["nom"]);
         req.materielsobjet[i]={"id":req.categorie[i]["id"], "materiel_stock":req.categorie[i]["nom"]};
-        // req.materielsobjet.push({"materiel_stock":i+1});
+        //on prend le nombre d'objet de sceaux en stock
         connection.query("SELECT * from objet WHERE idCategorie='" + i + "'+1 and siteEPF=1 and actif=1 and isStock=1", function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -85,7 +84,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
-
+        //on prend le nombre d'objet de troyes en stock
         connection.query('SELECT * from objet WHERE idCategorie="' + i + '"+1 and siteEPF=2 and actif=1 and isStock=1', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -99,6 +98,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
+        //on prend le nombre d'objet de mtp en stock
         connection.query('SELECT * from objet WHERE idCategorie="' + i + '"+1 and siteEPF=3 and actif=1 and isStock=1', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -112,6 +112,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
+        //on prend le nombre la limite pour cette catégorie à Sceaux
         connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '"+1 and siteEPF=1', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -128,6 +129,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
+        //on prend le nombre la limite pour cette catégorie à Troyes
         connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '"+1 and siteEPF=2', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -144,6 +146,7 @@ router.get('/stocks', function(req, res, next) {
           }
         });
 
+        //on prend le nombre la limite pour cette catégorie à Monpellier
         connection.query('SELECT limite from catlimite WHERE idCategorie="' + i + '"+1 and siteEPF=3', function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -157,6 +160,7 @@ router.get('/stocks', function(req, res, next) {
 
             }
 
+            //On calcule les différents besoins
             if (req.materielsobjet[i]["mini_sceaux"] > req.materielsobjet[i]["etat_sceaux"]) {
               req.materielsobjet[i]["besoin_sceaux"] = req.materielsobjet[i]["mini_sceaux"] - req.materielsobjet[i]["etat_sceaux"];
             } else {req.materielsobjet[i]["besoin_sceaux"] = 0;}
@@ -171,9 +175,7 @@ router.get('/stocks', function(req, res, next) {
 
             req.materielsobjet[i]["total_besoins"] = req.materielsobjet[i]["besoin_sceaux"] + req.materielsobjet[i]["besoin_troyes"] + req.materielsobjet[i]["besoin_montpellier"];
 
-            //res.send(req.materielsobjet);
-            //req.materielsobjet.push({"materiel_stock":2});
-            //if (i==req.nbrcategorie - 1 ) { res.send(req.materielsobjet)};
+            //Si tout est fini on envoie le tableau
             if (i==req.nbrcategorie - 1){res.send(JSON.stringify({"status": 200, "error": null, "response": req.materielsobjet}))};
           }
         });
@@ -190,6 +192,7 @@ router.get('/stocks', function(req, res, next) {
 
 });
 
+//On envoie tous les prêts en cours
 router.get('/prets', function(req, res, next) {
   connection.query('SELECT historiquepret.*, categorie.nom, uHelisa.EMAIL, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, objet, categorie, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.retourEffectif = "0000-00-00 00:00:00"', function (error, prets, fields) {
     if(error){
@@ -219,9 +222,12 @@ router.get('/:cat_id', function(req, res, next) {
 
 //modify categorie
 router.patch('/:cat_id', function(req, res, next) {
+  //on vérifie si on a tous les paramètres
   if (req.body.nom !== undefined){
+    //on vérifie si une catégorie n'a pas déjà le même nom
     connection.query('SELECT id from categorie WHERE nom = "' + req.body.nom + '"', function (error, results, fields) {
       if (!results.length){
+        //si tout est bon on update et on envoie la requête
         connection.query('UPDATE categorie SET nom = "' + req.body.nom + '" WHERE id = ' + req.params.cat_id, function (error, results, fields) {
           if(error){
             res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -242,6 +248,7 @@ router.patch('/:cat_id', function(req, res, next) {
 
 //delete categorie
 router.delete('/:cat_id', function(req, res, next) {
+  //on vérifie si des objets sont toujours dans cette catégorie
   connection.query('SELECT objet.id FROM objet, categorie WHERE objet.idCategorie = ' + req.params.cat_id, function (error, results, fields) {
     if(results.length){
       res.send(JSON.stringify({"status": 500, "error": "There are stil active objets in the Category", "response": null}));

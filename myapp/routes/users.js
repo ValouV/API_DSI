@@ -4,9 +4,8 @@ var jwt = require('jsonwebtoken');
 var crypto = require('crypto')
 
 //get specific user
+//route non protégée
 router.post('/connexion', function(req, res, next) {
-	//hash = crypto.createHmac('sha256', 'ahbon').update('password1').digest('hex');
-	//console.log(hash);
 	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE email=? and password=?',[req.body.email, crypto.createHmac('sha256', 'ahbon').update(req.body.password).digest('hex')], function (error, results, fields) {
 	  	if(error){
 	  		res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
@@ -18,9 +17,6 @@ router.post('/connexion', function(req, res, next) {
 			res.send(JSON.stringify({"status": 200, "error": null, "response": results, message: 'Authentication failed. User not found.' }));
 		}
 		if (results.length){
-
-
-
 				const payload = {
 					"iduser" : results[0].id,
 					 "emailuser" : results[0].email
@@ -64,6 +60,7 @@ router.use(function(req, res, next) {
   }
 });
 
+//retourne les informations de l'utilisateur
 router.get('/me', function(req, res, next){
 	connection.query('SELECT id, email, nom, prenom, role, siteEPF from user WHERE id = ' + jwt.decode(req.token).iduser, function (error, results, fields) {
 			if(error){
@@ -76,6 +73,7 @@ router.get('/me', function(req, res, next){
 		});
 });
 
+//protection des routes users
 router.use(function(req, res, next) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];

@@ -40,6 +40,7 @@ router.use(function(req, res, next) {
   }
 });
 
+//renvoie les informations de l'utilisateur via son id
 router.get('/:id_user', function(req, res, next){
 	connection.query('SELECT * FROM uHelisa WHERE ID_ETUDIANT = "' + req.params.id_user + '"', function (error, results, fields) {
 			if(error){
@@ -52,6 +53,8 @@ router.get('/:id_user', function(req, res, next){
 		});
 });
 
+//renvoie la photo de l'utiliateur
+//les photos sont stockées dans le dossier /myapp/public/images/helisa
 router.get('/photo/:id_user', function(req, res, next){
 	connection.query('SELECT PHOTO_IDENTITE FROM uHelisa WHERE ID_ETUDIANT = "' + req.params.id_user + '"', function (error, results, fields) {
 			if(error){
@@ -70,10 +73,10 @@ router.get('/mail/:email', function(req, res, next){
 	connection.query('SELECT * FROM uHelisa WHERE EMAIL = "' + req.params.email + '"', function (error, results, fields) {
 			if(error){
 				res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-				//Si il y a une erreur nous la retournons avec le message associé
+				//Si il y a une erreur nous la retournons avec le message associé et le code 500
 			} else {
-				res.send(JSON.stringify({"status": 500, "error": error, "response": results[0]}));
-				//If there is no error, all is good and response is 200OK.
+				res.send(JSON.stringify({"status": 200, "error": error, "response": results[0]}));
+				//Si il n'y a pas d'erreur nous retournons la réponse à la requête avec le code 200
 			}
 		});
 });

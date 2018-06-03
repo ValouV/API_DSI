@@ -1,3 +1,4 @@
+//librairies utilisées
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -9,7 +10,7 @@ var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var cron = require('node-cron');
 
-
+//routes utilisées et liées à leur fichier
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var objetsRouter = require('./routes/objets');
@@ -27,6 +28,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+//lecture de la requête
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -45,7 +47,7 @@ app.use(function(req, res, next){
 		user     : 'root',
 		password : '',
 		database : 'inventaire',
-		
+
 		//louis
 
 		/*port     : '3306',
@@ -70,8 +72,6 @@ app.use(function(req, res, next){
 //TODO commentaires
 //TODO fermer connection
 //TODO vérifer les types
-//TODO vérifier Tableau /cat/stocks
-//TODO route /extern
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
@@ -100,10 +100,12 @@ app.use(function(err, req, res, next) {
 	res.render('error');
 });
 
+//Cron job qui envoie un mail tous les jours si des prêts ne sont pas rendus
 cron.schedule('0 0 * * *', function(){
 	var moment = require('moment');
 	moment.locale('fr');
 	var nodemailer = require('nodemailer');
+	//on se connecte à la BDD
 	global.connection = mysql.createConnection({
 
 		//server connection ne pas toucher
@@ -124,10 +126,11 @@ cron.schedule('0 0 * * *', function(){
 		user     : 'root',
 		password : 'root',
 		database : 'Inventaire_DSI',*/
-		multipleStatements: true
+		multipleStatements: true,
 
 	});
 	connection.connect();
+	//on récupère les prêts
 	connection.query('SELECT historiquepret.*, objet.*, categorie.*, uHelisa.* FROM historiquepret, objet, categorie, uHelisa WHERE historiquepret.retourEffectif = "0000-00-00 00:00:00" AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.idUserHelisa = ID_ETUDIANT', function (error, results, fields) {
 		var transporter = nodemailer.createTransport({
 			service: 'gmail',
@@ -137,6 +140,7 @@ cron.schedule('0 0 * * *', function(){
 			}
 		});
 		var message = "";
+		//pour chaque prêt non rendu on envoie un mail à l'élève
 		for (var i = 0; i < results.length; i++) {
 			if(results[i].retourPrevu > moment().format()){
 				message = message + "L'objet " + results[i].idObjet + " de type " + results[i].nom + " loué (pas les poulets) par " + results[i].APPRENANT_NOM + " " + results[i].APPRENANT_PRENOM + " (" + results[i].EMAIL + ") est en retard. Il aurait dû revenir le " + moment(results[i].retourPrevu).format('l') + ".</br>";
@@ -156,6 +160,7 @@ cron.schedule('0 0 * * *', function(){
 		}
 		if(message != null){
 			connection.query('SELECT email from user WHERE role = 1', function (error, results, fields) {
+				//on envoie un mail avec tous les prets au utilisateurs de rang 1
 				results.forEach(function (to, i , array) {
 					const mailOptions = {
 						from: 'epf.stock.dsi@gmail.com', // sender address
