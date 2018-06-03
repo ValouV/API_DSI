@@ -110,12 +110,12 @@ router.post('/', function(req, res, next) {
           if (historique.length){
             res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
           } else {
-            connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + arrival + '","' + '0000-00-00 00:00:00' + '",' + idUser + ',' + req.body.idObjet + ',' + siteEPF + ')', function (error, results, fields) {
+            connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + arrival + '","' + '0000-00-00 00:00:00' + '",' + idUser + ',' + req.body.idObjet + ',' + siteEPF + '); UPDATE objet SET actif = 1 and isStock = 1 WHERE id = ' + req.body.idObjet+ ';', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
                 //If there is error, we send the error in the error section with 500 status
               } else {
-                res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+                res.send(JSON.stringify({"status": 200, "error": null, "response": results[0]}));
                 //If there is no error, all is good and response is 200OK.
               }
             });
@@ -195,8 +195,9 @@ function nomSiteEPF(siteEPF){
 	}
 }
 
+//envoi de mail
 function mail(destination, subject, message){
-  console.log(destination);
+  //le mail sera envoyé via une adresse mail spécifique
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -204,15 +205,16 @@ function mail(destination, subject, message){
       pass: '1EPFadmin'
     }
   });
-
+//pour chaque destinataire
   destination.forEach(function (to, i , array) {
+    //on crée le message a envoyer
     const mailOptions = {
       from: 'epf.stock.dsi@gmail.com', // sender address
       to: to.email, // list of receivers
       subject: subject,
       html: message
     };
-
+//puis on l'envoie en vérifiant le bon déroulé
     transporter.sendMail(mailOptions, function (err, info) {
       if(err)
       console.log(err)
@@ -222,12 +224,15 @@ function mail(destination, subject, message){
   });
 }
 
+//envoi de la notification via le système onesignal
 function sendNotification(data) {
+  //authentification
   var headers = {
     "Content-Type": "application/json; charset=utf-8",
     "Authorization": "Basic ZGRlYmE2N2MtNGZjOS00NzAzLThmOTgtN2ZiY2M0ZDQ0MmI1"
   };
 
+  //envoi à tous les abonnés
   var options = {
     host: "onesignal.com",
     port: 443,
@@ -236,6 +241,7 @@ function sendNotification(data) {
     headers: headers
   };
 
+  //on crée la requête
   var https = require('https');
   var req = https.request(options, function(res) {
     res.on('data', function(data) {
@@ -249,6 +255,7 @@ function sendNotification(data) {
     console.log(e);
   });
 
+  //on envoie au service en vérifiant la réponse en console
   req.write(JSON.stringify(data));
   req.end();
 };

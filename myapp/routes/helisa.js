@@ -64,11 +64,13 @@ router.get('/photo/:id_user', function(req, res, next){
 		});
 });
 
+//retourne les informations de l'utilisateur Hélisa en fonction de l'email
 router.get('/mail/:email', function(req, res, next){
+  //requete SQL
 	connection.query('SELECT * FROM uHelisa WHERE EMAIL = "' + req.params.email + '"', function (error, results, fields) {
 			if(error){
 				res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
-				//If there is error, we send the error in the error section with 500 status
+				//Si il y a une erreur nous la retournons avec le message associé
 			} else {
 				res.send(JSON.stringify({"status": 500, "error": error, "response": results[0]}));
 				//If there is no error, all is good and response is 200OK.
