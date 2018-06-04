@@ -71,7 +71,8 @@ app.use(function(req, res, next){
 //http://expressjs.com/fr/advanced/best-practice-security.html
 //TODO fermer connection
 //TODO vérifer les types
-//TODO créer stock quand on entre un objet de stock 
+//TODO créer stock quand on entre un objet de stock
+//TODO si token pas bon
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/objets', objetsRouter);
