@@ -69,7 +69,6 @@ app.use(function(req, res, next){
 
 //TODO vérifier la sécurité au minimum de la route de connection
 //http://expressjs.com/fr/advanced/best-practice-security.html
-//TODO commentaires
 //TODO fermer connection
 //TODO vérifer les types
 app.use('/', indexRouter);
