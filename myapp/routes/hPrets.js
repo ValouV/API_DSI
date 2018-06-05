@@ -125,7 +125,7 @@ router.post('/', function(req, res, next) {
             var idUser = jwt.decode(req.token).iduser;
             var depart = moment().format("YYYY-MM-DD HH:mm:ss");
             //on écrit le pret dans la base de données
-            connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa, siteEPF) VALUES ("' + depart + '","' + req.body.retourPrevu + '","0000-00-00 00:00:00",' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'",' + siteEPF + '); UPDATE objet SET actif = 1 and isStock = 0 WHERE id = ' + req.body.idObjet + ';', function (error, results, fields) {
+            connection.query('INSERT INTO historiquepret (depart, retourPrevu, retourEffectif, idUserAdmin, idObjet, idUserHelisa, siteEPF) VALUES ("' + depart + '","' + req.body.retourPrevu + '",NULL,' + idUser + ',' + req.body.idObjet + ',"' + req.body.idUserHelisa +'",' + siteEPF + '); UPDATE objet SET actif = 1 and isStock = 0 WHERE id = ' + req.body.idObjet + ';', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
                 //If there is error, we send the error in the error section with 500 status

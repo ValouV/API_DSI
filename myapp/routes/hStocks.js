@@ -112,7 +112,7 @@ router.post('/', function(req, res, next) {
             res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
           } else {
             //on entre l'objet en stock
-            connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + arrival + '","' + '0000-00-00 00:00:00' + '",' + idUser + ',' + req.body.idObjet + ',' + siteEPF + '); UPDATE objet SET actif = 1 and isStock = 1 WHERE id = ' + req.body.idObjet+ ';', function (error, results, fields) {
+            connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + arrival + '",NULL,' + idUser + ',' + req.body.idObjet + ',' + siteEPF + '); UPDATE objet SET actif = 1 and isStock = 1 WHERE id = ' + req.body.idObjet+ ';', function (error, results, fields) {
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
                 //If there is error, we send the error in the error section with 500 status
@@ -134,7 +134,7 @@ router.post('/', function(req, res, next) {
 //route de sortie de stock
 router.patch('/depart/:hstocks_id', function(req, res, next) {
   //on entre la date de sortie dans la base de données
-  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + moment().format("YYYY-MM-DD HH:mm:ss") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.depart = "0000-00-00 00:00:00" AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
+  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + moment().format("YYYY-MM-DD HH:mm:ss") + '", objet.actif=0 WHERE historiquestock.idObjet=objet.id AND historiquestock.depart = NULL AND historiquestock.id=' + req.params.hstocks_id, function (error, results, fields) {
       console.log(results.affectedRows);
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
