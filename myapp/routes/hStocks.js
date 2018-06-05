@@ -99,11 +99,9 @@ router.post('/', function(req, res, next) {
   //on vérifie qu'on a tous les objets
   if (req.body.idObjet !== undefined){
     //on récupère les informations de l'objet
-    connection.query('SELECT isStock, siteEPF FROM objet WHERE objet.actif = 1 AND id = ' + req.body.idObjet, function (error, objet, fields) {
+    connection.query('SELECT isStock, siteEPF FROM objet WHERE id = ' + req.body.idObjet, function (error, objet, fields) {
       if (!objet.length){
         res.send(JSON.stringify({"status": 500, "error": "Object not found", "response": null}));
-      } else if (objet[0].isStock == 0){
-        res.send(JSON.stringify({"status": 500, "error": "Object is not Stock", "response": null}));
       } else {
         var siteEPF= objet[0].siteEPF
         var idUser = jwt.decode(req.token).iduser;
