@@ -228,7 +228,9 @@ router.get('/state/:objet_id', function(req, res, next){
               //si il est en stock le mode est 2
               if (objet.isStock == 1) {
                 connection.query('SELECT * from objet WHERE actif = 1 and isStock = 1 AND idCategorie = ' + objet.idCategorie + ' AND siteEPF = ' + objet.siteEPF + ';' , function(error6, compte, fields6){
-                  res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie, "reste":compte.length }}));
+                  connection.query('SELECT * from historiquestock WHERE depart = "0000-00-00 00:00:00" AND idObjet = ' + objet.id + ';', function(error8, stock, fields8){
+                    res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie, stock[0], "reste":compte.length }}));
+                  });
                 });
               } else {
                 connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND idObjet = ' + req.params.objet_id + ' AND retourEffectif = "0000-00-00 00:00:00"', function(error2, monPret, fields2){
