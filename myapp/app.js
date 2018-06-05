@@ -44,7 +44,7 @@ app.use(function(req, res, next){
 
 		//server connection ne pas toucher
 		host     : 'localhost',
-		/*user     : 'root',
+		user     : 'root',
 		password : '',
 		database : 'inventaire',
 
@@ -53,13 +53,13 @@ app.use(function(req, res, next){
 		/*port     : '3306',
 		user     : 'root',
 		password : '',
-		database : 'bddclean',
+		database : 'bddclean',/*
 
 		//val
-		*/port     : '8889',
+		port     : '8889',
 		user     : 'root',
 		password : 'root',
-		database : 'Inventaire_DSI',
+		database : 'Inventaire_DSI',*/
 		multipleStatements: true
 
 	});
