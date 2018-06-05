@@ -108,8 +108,8 @@ router.post('/', function(req, res, next) {
     if(date1_ms>date2_ms){
       //on récupère les informations de l'objet
     connection.query('SELECT isStock, siteEPF FROM objet WHERE objet.actif = 1 AND objet.id = ' + req.body.idObjet, function (error, objet, fields) {
+      var siteEPF = objet[0].siteEPF;
       if(!objet.length || (objet[0].isStock == 1)){
-        var siteEPF = objet[0].siteEPF;
         res.send(JSON.stringify({"status": 500, "error": "Unknown loan object", "response": null}));
       } else {
         //on vérifie qu'il n'y a pas de prêt en cours
