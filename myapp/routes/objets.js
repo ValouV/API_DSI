@@ -182,7 +182,7 @@ router.post('/', function(req, res, next) {
               } else {
                 connection.query('SELECT * from objet WHERE id = ' + results.insertId , function (error, monObjet, fields) {
                   if (monObjet[0].isStock == 1){
-                    connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + moment().format() + '",NULL,' + jwt.decode(req.headers['x-access-token']).iduser + ',' + req.body.idObjet + ',' + site[0].siteEPF + '); UPDATE objet SET actif = 1 and isStock = 1 WHERE id = ' + req.body.idObjet+ ';', function (error7, results7, fields7) {
+                    connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + moment().format("YYYY-MM-DD HH:mm:ss") + '",NULL,' + jwt.decode(req.headers['x-access-token']).iduser + ',' + req.body.idObjet + ',' + site[0].siteEPF + ');', function (error7, results7, fields7) {
                     });
                   }
                   connection.query('SELECT * from categorie WHERE id = ' + monObjet[0].idCategorie + ';', function(error3, maCategorie, fields3){
