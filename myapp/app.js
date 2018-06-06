@@ -132,7 +132,7 @@ cron.schedule('0 0 * * *', function(){
 	});
 	connection.connect();
 	//on récupère les prêts
-	connection.query('SELECT historiquepret.*, objet.*, categorie.*, uHelisa.* FROM historiquepret, objet, categorie, uHelisa WHERE historiquepret.retourEffectif = "0000-00-00 00:00:00" AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.idUserHelisa = ID_ETUDIANT', function (error, results, fields) {
+	connection.query('SELECT historiquepret.*, objet.*, categorie.*, uHelisa.* FROM historiquepret, objet, categorie, uHelisa WHERE historiquepret.retourEffectif IS NULL AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.idUserHelisa = ID_ETUDIANT', function (error, results, fields) {
 		var transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {

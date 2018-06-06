@@ -228,13 +228,13 @@ router.get('/state/:objet_id', function(req, res, next){
               //si il est en stock le mode est 2
               if (objet.isStock == 1) {
                 connection.query('SELECT * from objet WHERE actif = 1 and isStock = 1 AND idCategorie = ' + objet.idCategorie + ' AND siteEPF = ' + objet.siteEPF + ';' , function(error6, compte, fields6){
-                  connection.query('SELECT * from historiquestock WHERE depart = "0000-00-00 00:00:00" AND idObjet = ' + objet.id + ';', function(error8, stock, fields8){
+                  connection.query('SELECT * from historiquestock WHERE depart is NULL AND idObjet = ' + objet.id + ';', function(error8, stock, fields8){
                     var hStock = stock[0];
                     res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie, hStock, "reste":compte.length }}));
                   });
                 });
               } else {
-                connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND idObjet = ' + req.params.objet_id + ' AND retourEffectif = "0000-00-00 00:00:00"', function(error2, monPret, fields2){
+                connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND idObjet = ' + req.params.objet_id + ' AND retourEffectif IS NULL', function(error2, monPret, fields2){
                   if(error){
                     res.send(JSON.stringify({"status": 500, "error": error2, "response": null}));
                     //If there is error, we send the error in the error section with 500 status

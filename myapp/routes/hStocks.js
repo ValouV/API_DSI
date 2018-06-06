@@ -107,7 +107,7 @@ router.post('/', function(req, res, next) {
         var idUser = jwt.decode(req.token).iduser;
         var arrival = moment().format("YYYY-MM-DD HH:mm:ss");
         //on vérifie que l'objet n'est pas déjà en stock
-        connection.query('SELECT * FROM historiquestock WHERE depart = "0000-00-00 00:00:00" AND idObjet =' + req.body.idObjet, function (error, historique, fields) {
+        connection.query('SELECT * FROM historiquestock WHERE depart IS NULL AND idObjet =' + req.body.idObjet, function (error, historique, fields) {
           if (historique.length){
             res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
           } else {
@@ -134,7 +134,7 @@ router.post('/', function(req, res, next) {
 //route de sortie de stock
 router.patch('/depart/:hstocks_id', function(req, res, next) {
   //on entre la date de sortie dans la base de données
-  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + moment().format("YYYY-MM-DD HH:mm:ss") + '", objet.actif = 0 WHERE historiquestock.idObjet = objet.id AND historiquestock.depart = "0000-00-00 00:00:00" AND historiquestock.id =' + req.params.hstocks_id, function (error, results, fields) {
+  connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + moment().format("YYYY-MM-DD HH:mm:ss") + '", objet.actif = 0 WHERE historiquestock.idObjet = objet.id AND historiquestock.depart IS NULL AND historiquestock.id =' + req.params.hstocks_id, function (error, results, fields) {
     console.log(error);
       console.log(results.affectedRows);
       if(error){

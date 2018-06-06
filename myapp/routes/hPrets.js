@@ -113,7 +113,7 @@ router.post('/', function(req, res, next) {
         res.send(JSON.stringify({"status": 500, "error": "Unknown loan object", "response": null}));
       } else {
         //on vérifie qu'il n'y a pas de prêt en cours
-        connection.query('SELECT id FROM historiquepret WHERE retourEffectif = "0000-00-00 00:00:00" AND idObjet = ' + req.body.idObjet, function (error, pret, fields) {
+        connection.query('SELECT id FROM historiquepret WHERE retourEffectif IS NULL AND idObjet = ' + req.body.idObjet, function (error, pret, fields) {
           if(pret.length){
             res.send(JSON.stringify({"status": 500, "error": "Object already in loan", "response": null}));
           } else {

@@ -194,7 +194,7 @@ router.get('/stocks', function(req, res, next) {
 
 //On envoie tous les prêts en cours
 router.get('/prets', function(req, res, next) {
-  connection.query('SELECT historiquepret.*, categorie.nom, uHelisa.EMAIL, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, objet, categorie, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.retourEffectif = "0000-00-00 00:00:00"', function (error, prets, fields) {
+  connection.query('SELECT historiquepret.*, categorie.nom, uHelisa.EMAIL, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, objet, categorie, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND historiquepret.idObjet = objet.id AND objet.idCategorie = categorie.id AND historiquepret.retourEffectif IS NULL', function (error, prets, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
       //If there is error, we send the error in the error section with 500 status
