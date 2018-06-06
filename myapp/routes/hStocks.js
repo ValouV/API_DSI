@@ -135,6 +135,7 @@ router.post('/', function(req, res, next) {
 router.patch('/depart/:hstocks_id', function(req, res, next) {
   //on entre la date de sortie dans la base de données
   connection.query('UPDATE historiquestock, objet SET historiquestock.depart ="' + moment().format("YYYY-MM-DD HH:mm:ss") + '", objet.actif = 0 WHERE historiquestock.idObjet = objet.id AND historiquestock.depart = "0000-00-00 00:00:00" AND historiquestock.id =' + req.params.hstocks_id, function (error, results, fields) {
+    console.log(error);
       console.log(results.affectedRows);
       if(error){
         res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
