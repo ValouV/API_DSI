@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
-
+var mysql = require("mysql");
 
 router.use(function(req, res, next) {
   // check header or url parameters or post parameters for token
@@ -21,6 +21,7 @@ router.use(function(req, res, next) {
     // verifies secret and checks exp
     console.log('SELECT role from user WHERE id = '+ jwt.decode(token).iduser);
     connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
+<<<<<<< Updated upstream
       if ([1,2].indexOf(results[0].role) !== -1 ){
         next();
       } else {
@@ -38,6 +39,7 @@ router.use(function(req, res, next) {
       message: 'No token provided.'
     });
   }
+
 });
 
 //get all active objets
@@ -50,7 +52,9 @@ router.get('/', function(req, res, next) {
       res.send(({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
+    connection.end();
   });
+  
 });
 
 //get all objets
@@ -63,6 +67,7 @@ router.get('/all', function(req, res, next) {
       res.send(({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
+    connection.end();
   });
 });
 
@@ -77,6 +82,7 @@ router.get('/:objet_id', function(req, res, next) {
       //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
       //If there is no error, all is good and response is 200OK.
     }
+    connection.end();
   });
 });
 
@@ -96,9 +102,11 @@ router.get('/:objet_id/historique', function(req, res, next) {
           //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
           //If there is no error, all is good and response is 200OK.
         }
+        connection.end();
       });
     }
   });
+
 });
 
 //modify object
@@ -120,6 +128,7 @@ router.patch('/:objet_id', function(req, res, next) {
             res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
             //If there is no error, all is good and response is 200OK.
           }
+          connection.end();
         });
       }
     });
@@ -140,11 +149,16 @@ router.delete('/:objet_id', function(req, res, next) {
       console.log(moment().format("YYYY-MM-DD h:mm:ss"));
       //fermeture des prets en cours
       connection.query('UPDATE historiquepret SET retourEffectif = "' + moment().format("YYYY-MM-DD HH:mm:ss") + '" WHERE idObjet = ' + req.params.objet_id, function(error, hist, fields){
+<<<<<<< Updated upstream
         //fermeture des stocks en cours
         connection.query('UPDATE historiquestock SET depart = "' + moment().format("YYYY-MM-DD HH:mm:ss") + '" WHERE idObjet = ' + req.params.objet_id, function(error, hist, fields){
           //supression des alertes
           connection.query('DELETE alertepret.* FROM alertepret LEFT JOIN historiquepret AS h ON alertepret.idHistoriquePret = h.id LEFT JOIN objet AS obj ON h.idObjet = obj.id WHERE obj.id =' + req.params.objet_id, function(error, alerte, fields){
           });
+=======
+        connection.query('DELETE alertepret.* FROM alertepret LEFT JOIN historiquepret AS h ON alertepret.idHistoriquePret = h.id LEFT JOIN objet AS obj ON h.idObjet = obj.id WHERE obj.id =' + req.params.objet_id, function(error, alerte, fields){
+        connection.end();
+>>>>>>> Stashed changes
         });
       });
       //If there is no error, all is good and response is 200OK.
@@ -198,6 +212,7 @@ router.post('/', function(req, res, next) {
                   });
                 });
               }
+              connection.end();
             });
           }
         });
@@ -229,14 +244,20 @@ router.get('/state/:objet_id', function(req, res, next){
             //si il est inactif le mode est 1
             if (objet.actif == 0){
               res.send(JSON.stringify({"status": 200, "error": null, "response":{ "mode":1 , objet, categorie }}));
+              connection.end();
             } else {
               //si il est en stock le mode est 2
               if (objet.isStock == 1) {
                 connection.query('SELECT * from objet WHERE actif = 1 and isStock = 1 AND idCategorie = ' + objet.idCategorie + ' AND siteEPF = ' + objet.siteEPF + ';' , function(error6, compte, fields6){
+<<<<<<< Updated upstream
                   connection.query('SELECT * from historiquestock WHERE depart is NULL AND idObjet = ' + objet.id + ';', function(error8, stock, fields8){
                     var hStock = stock[0];
                     res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie, hStock, "reste":compte.length }}));
                   });
+=======
+                  res.send(JSON.stringify({"status": 200, "error": null, "response": { "mode":2 , objet, categorie, "reste":compte.length }}));
+                connection.end();
+>>>>>>> Stashed changes
                 });
               } else {
                 connection.query('SELECT historiquepret.*, uHelisa.APPRENANT_NOM, uHelisa.APPRENANT_PRENOM from historiquepret, uHelisa WHERE historiquepret.idUserHelisa = uHelisa.ID_ETUDIANT AND idObjet = ' + req.params.objet_id + ' AND retourEffectif IS NULL', function(error2, monPret, fields2){
@@ -253,6 +274,7 @@ router.get('/state/:objet_id', function(req, res, next){
                       res.send(JSON.stringify({"status": 200, "error": null, "response":  { "mode":4 , objet, categorie, pret }}));
                     }
                   }
+                  connection.end();
                 });
               }
             }

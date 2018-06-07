@@ -27,6 +27,7 @@ router.use(function(req, res, next) {
           message: 'You should be admin to see this.'
         });
       }
+        //connection.end();
     });
   } else {
     // if there is no token
@@ -44,6 +45,7 @@ router.get('/', function(req, res, next) {
   connection.query('SELECT alertepret.*, historiquepret.idUserAdmin, objet.id AS idObjet from alertepret, historiquepret, objet WHERE alertepret.idHistoriquePret = historiquepret.id AND historiquepret.idObjet = objet.id', function (error, alertesPret, fields) {
     if(error){
       res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
+      //connection.end();
       //If there is error, we send the error in the error section with 500 status
     } else {
       //selection des informations d'alertes de stock
@@ -51,6 +53,7 @@ router.get('/', function(req, res, next) {
         if(error){
           res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
           //If there is error, we send the error in the error section with 500 status
+          //connection.end();
         } else {
           //envoi des alertes
           res.send(JSON.stringify({"status": 200, "error": null, "response": {alertesPret, alertesStock}}));
@@ -59,8 +62,10 @@ router.get('/', function(req, res, next) {
             if(error){
               console.log(error);
             }
+            ;
           };
         }
+        connection.end()
       });
     }
   });

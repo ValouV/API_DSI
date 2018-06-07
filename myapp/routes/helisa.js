@@ -50,6 +50,7 @@ router.get('/:id_user', function(req, res, next){
 				res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
 				//If there is no error, all is good and response is 200OK.
 			}
+			      connection.end();
 		});
 });
 
@@ -64,6 +65,7 @@ router.get('/photo/:id_user', function(req, res, next){
 				res.sendFile(path.resolve('./public/images/helisa/' + results[0].PHOTO_IDENTITE));
 				//If there is no error, all is good and response is 200OK.
 			}
+			      connection.end();
 		});
 });
 
@@ -78,6 +80,7 @@ router.get('/mail/:email', function(req, res, next){
 				res.send(JSON.stringify({"status": 200, "error": error, "response": results[0]}));
 				//Si il n'y a pas d'erreur nous retournons la réponse à la requête avec le code 200
 			}
+			connection.end();
 		});
 });
 

@@ -47,6 +47,7 @@ router.get('/', function(req, res, next) {
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
+    connection.end();
   });
 });
 
@@ -60,6 +61,7 @@ router.get('/:climit_id', function(req, res, next) {
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
+    connection.end();
   });
 });
 
@@ -75,7 +77,9 @@ router.patch('/updatebackoffice', function(req, res, next) {
         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
         //If there is no error, all is good and response is 200OK.
       }
+      connection.end();
     });
+
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
   }
@@ -94,6 +98,7 @@ router.patch('/:climit_id', function(req, res, next) {
         //If there is no error, all is good and response is 200OK.
       }
     });
+    connection.end();
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));
   }
@@ -109,6 +114,7 @@ router.delete('/:climit_id', function(req, res, next) {
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
+    connection.end();
   });
 });
 
@@ -129,6 +135,7 @@ router.post('/', function(req, res, next) {
           }
         });
       }
+      connection.end();
     });
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Provide all parameters", "response": null}));

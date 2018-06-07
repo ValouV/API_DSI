@@ -28,7 +28,9 @@ router.use(function(req, res, next) {
 		        message: 'You should be admin to see this.'
 		    });
 			}
+  connection.end();
 		});
+
   } else {
     // if there is no token
     // return an error
@@ -49,6 +51,7 @@ router.get('/', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
+      connection.end();
   	});
 });
 
@@ -62,6 +65,7 @@ router.get('/:hstocks_id', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
+      connection.end();
   	});
 });
 
@@ -76,7 +80,10 @@ router.patch('/:hstocks_id', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
+
   	});
+      connection.end();
+
   }
 });
 
@@ -148,7 +155,9 @@ router.patch('/depart/:hstocks_id', function(req, res, next) {
         res.send(JSON.stringify({"status": 200, "error": message, "response": results}));
         //If there is no error, all is good and response is 200OK.
       }
+
     });
+
 });
 
 module.exports = router;
