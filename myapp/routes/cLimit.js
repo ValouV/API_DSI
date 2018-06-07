@@ -14,19 +14,21 @@ router.use(function(req, res, next) {
         // if everything is good, save to request for use in other routes
         req.decoded = decoded;
         req.token = token;
-      }
-    });
-    // verifies secret and checks exp
-    connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
-      if ([1,2].indexOf(results[0].role) !== -1 ){
-        next();
-      } else {
-        return res.status(403).send({
-          success: false,
-          message: 'You should be admin to see this.'
+
+        connection.query('SELECT role from user WHERE id = '+ jwt.decode(token).iduser, function (error, results, fields) {
+          if ([1,2].indexOf(results[0].role) !== -1 ){
+            next();
+          } else {
+            return res.status(403).send({
+              success: false,
+              message: 'You should be admin to see this.'
+            });
+          }
         });
       }
     });
+    // verifies secret and checks exp
+
   } else {
     // if there is no token
     // return an error
