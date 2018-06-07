@@ -43,13 +43,13 @@ app.use(function(req, res, next){
 	global.connection = mysql.createConnection({
 
 		//server connection ne pas toucher
-		/*host     : 'localhost',
+		host     : 'localhost',
 		user     : 'root',
 		password : '',
-		database : 'inventaire',*/
+		database : 'inventaire',
 		//louis
 
-		port     : '3306',
+		/*port     : '3306',
 		user     : 'root',
 		password : '',
 		database : 'bddclean',/*
@@ -109,14 +109,14 @@ cron.schedule('0 0 * * *', function(){
 	global.connection = mysql.createConnection({
 
 		//server connection ne pas toucher
-		/*host     : 'localhost',
+		host     : 'localhost',
 		user     : 'root',
 		password : '',
-		database : 'inventaire',*/
+		database : 'inventaire',
 
 		//louis
 	
-		port     : '3306',
+		/*port     : '3306',
 		user     : 'root',
 		password : '',
 		database : 'bddclean',/*
