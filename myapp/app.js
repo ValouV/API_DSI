@@ -115,7 +115,7 @@ cron.schedule('0 0 * * *', function(){
 		database : 'inventaire',
 
 		//louis
-	
+
 		/*port     : '3306',
 		user     : 'root',
 		password : '',
@@ -178,7 +178,7 @@ cron.schedule('0 0 * * *', function(){
 			});
 		}
 	});
-	connection.end();
+	//connection.end();
 });
 
 module.exports = app;

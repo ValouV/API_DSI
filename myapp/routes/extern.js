@@ -92,7 +92,7 @@ router.get('/', function(req, res, next) {
 
       }
     }
-     connection.end();
+     //connection.end();
   });
 });
 module.exports = router;

@@ -51,7 +51,7 @@ router.get('/', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
-      connection.end();
+      //connection.end();
   	});
 });
 
@@ -65,7 +65,7 @@ router.get('/:hprets_id', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
-      connection.end();
+      //connection.end();
   	});
 });
 
@@ -82,7 +82,7 @@ router.patch('/:hprets_id', function(req, res, next) {
   			//If there is no error, all is good and response is 200OK.
 	  	}
   	});
-        connection.end();
+        //connection.end();
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Please provide all parameters", "response": null}));
   }
@@ -164,7 +164,7 @@ router.patch('/retour/:hprets_id', function(req, res, next) {
         //If there is no error, all is good and response is 200OK.
       }
     });
-        connection.end();
+        //connection.end();
 });
 
 module.exports = router;

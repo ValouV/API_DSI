@@ -50,7 +50,7 @@ router.get('/', function(req, res, next) {
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
-    connection.end();
+    //connection.end();
   });
 });
 
@@ -186,7 +186,7 @@ router.get('/stocks', function(req, res, next) {
         });
       }
 
- connection.end();
+ //connection.end();
     }
 
   });
@@ -207,7 +207,7 @@ router.get('/prets', function(req, res, next) {
       res.send(JSON.stringify({"status": 200, "error": null, "response": prets}));
       //If there is no error, all is good and response is 200OK.
     }
-     connection.end();
+     //connection.end();
   });
 });
 
@@ -222,7 +222,7 @@ router.get('/:cat_id', function(req, res, next) {
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
-     connection.end();
+     //connection.end();
   });
 
 });
@@ -243,7 +243,7 @@ router.patch('/:cat_id', function(req, res, next) {
             res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
             //If there is no error, all is good and response is 200OK.
           }
-          connection.end();
+          //connection.end();
         });
       } else {
         res.send(JSON.stringify({"status": 500, "error": "Category name already taken", "response": null}));
@@ -271,7 +271,7 @@ router.delete('/:cat_id', function(req, res, next) {
         }
 
       });
-      connection.end();
+      //connection.end();
     }
   });
 });
@@ -293,7 +293,7 @@ router.post('/', function(req, res, next) {
       } else {
         res.send(JSON.stringify({"status": 500, "error": "Category name already taken", "response": null}));
       }
-      connection.end();
+      //connection.end();
     });
   } else {
     res.send(JSON.stringify({"status": 500, "error": "Please provide parameter", "response": null}));

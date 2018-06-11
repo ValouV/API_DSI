@@ -52,7 +52,7 @@ router.get('/', function(req, res, next) {
       res.send(({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
-    connection.end();
+    //connection.end();
   });
 
 });
@@ -67,7 +67,7 @@ router.get('/all', function(req, res, next) {
       res.send(({"status": 200, "error": null, "response": results}));
       //If there is no error, all is good and response is 200OK.
     }
-    connection.end();
+    //connection.end();
   });
 });
 
@@ -82,7 +82,7 @@ router.get('/:objet_id', function(req, res, next) {
       //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
       //If there is no error, all is good and response is 200OK.
     }
-    connection.end();
+    //connection.end();
   });
 });
 
@@ -102,7 +102,7 @@ router.get('/:objet_id/historique', function(req, res, next) {
           //console.log(jwt.decode(req.token).iduser + " " + jwt.decode(req.token).emailuser);
           //If there is no error, all is good and response is 200OK.
         }
-        connection.end();
+        //connection.end();
       });
     }
   });
@@ -128,7 +128,7 @@ router.patch('/:objet_id', function(req, res, next) {
             res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
             //If there is no error, all is good and response is 200OK.
           }
-          connection.end();
+          //connection.end();
         });
       }
     });
@@ -217,7 +217,7 @@ router.post('/', function(req, res, next) {
         });
       }
     }
-    //connection.end();
+    ////connection.end();
   });
 });
 
@@ -244,7 +244,7 @@ router.get('/state/:objet_id', function(req, res, next){
             //si il est inactif le mode est 1
             if (objet.actif == 0){
               res.send(JSON.stringify({"status": 200, "error": null, "response":{ "mode":1 , objet, categorie }}));
-              //connection.end();
+              ////connection.end();
             } else {
               //si il est en stock le mode est 2
               if (objet.isStock == 1) {
@@ -269,7 +269,7 @@ router.get('/state/:objet_id', function(req, res, next){
                       res.send(JSON.stringify({"status": 200, "error": null, "response":  { "mode":4 , objet, categorie, pret }}));
                     }
                   }
-                  connection.end();
+                  //connection.end();
                 });
               }
             }

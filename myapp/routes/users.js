@@ -31,7 +31,7 @@ router.post('/connexion', function(req, res, next) {
 				    });
 			}
 	  	}
-	  	connection.end();
+	  	//connection.end();
   	});
 });
 
@@ -71,7 +71,7 @@ router.get('/me', function(req, res, next){
 				res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
 				//If there is no error, all is good and response is 200OK.
 			}
-			connection.end();
+			//connection.end();
 		});
 });
 
@@ -115,7 +115,7 @@ router.get('/', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
-	  	connection.end();
+	  	//connection.end();
   	});
 });
 
@@ -129,7 +129,7 @@ router.get('/:user_id', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
-	  	connection.end();
+	  	//connection.end();
   	});
 });
 
@@ -144,7 +144,7 @@ router.patch('/:user_id', function(req, res, next) {
 				res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
 				//If there is no error, all is good and response is 200OK.
 			}
-			connection.end();
+			//connection.end();
 		});
 	} else {
 		res.send(JSON.stringify({"status": 200, "error": null, "response": "You should give all parameters"}));
@@ -161,7 +161,7 @@ router.delete('/:user_id', function(req, res, next) {
   			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   			//If there is no error, all is good and response is 200OK.
 	  	}
-	  	connection.end();
+	  	//connection.end();
   	});
 });
 
@@ -180,7 +180,7 @@ router.post('/', function(req, res, next) {
 						res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
 						//If there is no error, all is good and response is 200OK.
 					}
-					connection.end();
+					//connection.end();
 				});
 			}
 		});
