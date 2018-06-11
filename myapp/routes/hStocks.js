@@ -203,6 +203,8 @@ function alerteStock(results){
                 sendNotification(messageNotif);
                 //on créer l'alerte associée
                 connection.query('INSERT INTO alerteStock(date, message, lu, type, idHistoriqueStock) VALUES ("'+ moment().format("YYYY-MM-DD HH:mm:ss") +'","' + message + '",0,0,' + idStock +')', function (error, results, fields) {
+                  console.log(error);
+                  console.log(results);
                 });
                 return message;
               });
