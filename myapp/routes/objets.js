@@ -217,7 +217,7 @@ router.post('/', function(req, res, next) {
         });
       }
     }
-    connection.end();
+    //connection.end();
   });
 });
 
