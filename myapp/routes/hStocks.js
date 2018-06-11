@@ -119,6 +119,7 @@ router.post('/', function(req, res, next) {
         connection.query('SELECT * FROM historiquestock WHERE depart IS NULL AND idObjet =' + req.body.idObjet, function (error, historique, fields) {
           console.log(error);
           console.log(historique);
+          if (historique.length){
             res.send(JSON.stringify({"status": 500, "error": "Object is already in stock", "response": null}));
           } else {
             //on entre l'objet en stock
