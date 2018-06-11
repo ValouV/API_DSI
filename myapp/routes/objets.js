@@ -30,7 +30,7 @@ router.use(function(req, res, next) {
         });
       }
     });
-    
+
   } else {
     // if there is no token
     // return an error
@@ -54,7 +54,7 @@ router.get('/', function(req, res, next) {
     }
     connection.end();
   });
-  
+
 });
 
 //get all objets
@@ -206,10 +206,10 @@ router.post('/', function(req, res, next) {
                     }
                   });
                 });
-              }
-              connection.end();
+              }  
             });
           }
+          connection.end();
         });
       }
     }
