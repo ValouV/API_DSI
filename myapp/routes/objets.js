@@ -244,7 +244,7 @@ router.get('/state/:objet_id', function(req, res, next){
             //si il est inactif le mode est 1
             if (objet.actif == 0){
               res.send(JSON.stringify({"status": 200, "error": null, "response":{ "mode":1 , objet, categorie }}));
-              connection.end();
+              //connection.end();
             } else {
               //si il est en stock le mode est 2
               if (objet.isStock == 1) {
