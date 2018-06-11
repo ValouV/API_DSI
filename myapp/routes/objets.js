@@ -185,11 +185,15 @@ router.post('/', function(req, res, next) {
 
             //on crée l'objet
             connection.query('INSERT INTO objet (actif, isStock, commentaire, siteEPF, idCategorie, idUser) VALUES (' + req.body.actif + ',' + req.body.isStock + ',"' + req.body.commentaire +'",' + site[0].siteEPF + ',' + req.body.idCategorie + ',' + jwt.decode(req.headers['x-access-token']).iduser +')', function (error, results, fields) {
+              console.log(results);
+              console.log(error);
               if(error){
                 res.send(JSON.stringify({"status": 500, "error": error, "response": null}));
                 //If there is error, we send the error in the error section with 500 status
               } else {
                 connection.query('SELECT * from objet WHERE id = ' + results.insertId , function (error, monObjet, fields) {
+                  console.log(error);
+                  console.log(monObjet);
                   if (monObjet[0].isStock == 1){
                     connection.query('INSERT INTO historiquestock (arrivée, depart, idUserAdmin, idObjet, siteEPF) VALUES ("' + moment().format("YYYY-MM-DD HH:mm:ss") + '",NULL,' + jwt.decode(req.headers['x-access-token']).iduser + ',' + monObjet[0].id + ',' + site[0].siteEPF + ');', function (error7, results7, fields7) {
                       console.log(error7);
@@ -206,7 +210,7 @@ router.post('/', function(req, res, next) {
                     }
                   });
                 });
-              }  
+              }
             });
           }
           connection.end();
